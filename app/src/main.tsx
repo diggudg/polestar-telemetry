@@ -14,38 +14,26 @@ import { MantineColors } from './theme/colors';
 const theme = createTheme({
   primaryColor: 'polestarOrange',
   colors: {
-    // Polestar Safety Orange - Primary accent color
     polestarOrange: MantineColors.polestarOrange,
-    // Polestar Red - Alerts and errors
     polestarRed: MantineColors.polestarRed,
-    // Polestar Grey - Secondary, inactive states
     polestarGrey: MantineColors.polestarGrey,
-    // Polestar Green - Success states
     polestarGreen: MantineColors.polestarGreen,
-    // Polestar Cyan - Info states
     polestarCyan: MantineColors.polestarCyan,
-    // Polestar Yellow - Warning states
     polestarYellow: MantineColors.polestarYellow,
-    // Override default 'orange' to use Polestar orange
     orange: MantineColors.polestarOrange,
-    // Override 'red' to use Polestar red
     red: MantineColors.polestarRed,
-    // Override 'green' to use Polestar green
     green: MantineColors.polestarGreen,
-    // Override 'cyan' to use Polestar cyan
     cyan: MantineColors.polestarCyan,
-    // Override 'yellow' to use Polestar yellow
     yellow: MantineColors.polestarYellow,
-    // Polestar Carbon / Grays for dark mode
     dark: [
-      '#C8C9C7', // Grey Nurse
-      '#B1B3B3', // Agathe Grey
-      '#97999B', // Grey Chateau
-      '#75787B', // Storm Grey
-      '#53565A', // Iron Grey
+      '#C8C9C7',
+      '#B1B3B3',
+      '#97999B',
+      '#75787B',
+      '#53565A',
       '#3A3C3F',
       '#25262B',
-      '#1A1B1E', // Dark background
+      '#1A1B1E',
       '#141517',
       '#101113',
     ],

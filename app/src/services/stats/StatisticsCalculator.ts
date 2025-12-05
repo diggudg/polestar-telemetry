@@ -35,7 +35,6 @@ export class StatisticsCalculator {
    */
   calculateCarbonSavings(data, iceEmissions = 0.171) {
     const totalDistance = this._calculateTotalDistance(data);
-    // Assuming grid emissions of ~0.4 kg CO2/kWh
     const totalConsumption = this._calculateTotalConsumption(data);
     const evEmissions = totalConsumption * 0.4;
     const iceEquivalent = totalDistance * iceEmissions;
@@ -96,7 +95,6 @@ export class StatisticsCalculator {
     return trend;
   }
 
-  // Private calculation methods
   _calculateTotalTrips(data) {
     return data.length;
   }

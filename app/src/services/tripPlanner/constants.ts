@@ -1,0 +1,9 @@
+export const BATTERY_CAPACITY_KWH = 78;
+export const HARD_RESERVE_PERCENT = 10;
+export const SEARCH_TRIGGER_PERCENT = 12.5;
+export const DEFAULT_STOP_CHARGE_SOC = 80;
+export const MAX_INTERMEDIATE_STOPS = 5;
+export const CHARGER_SEARCH_RADIUS_METERS = 5000;
+export const OVERPASS_BASE_URL = 'https://overpass-api.de/api/interpreter';
+export const OSRM_BASE_URL = 'https://router.project-osrm.org';
+export const PUBLIC_CHARGING_POWER_KW = 100;

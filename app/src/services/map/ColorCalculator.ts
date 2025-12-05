@@ -10,12 +10,10 @@ export class ColorCalculator {
    */
   getEfficiencyColor(efficiency) {
     const eff = parseFloat(efficiency);
-    // Safety Orange for 'excellent' (Polestar active color)
-    if (eff < 15) return [255, 117, 0]; // safety orange (#FF7500)
-    if (eff < 20) return [250, 176, 5]; // yellow
-    if (eff < 25) return [253, 126, 20]; // orange
-    // Elemental Red for high consumption alerts
-    return [216, 15, 33]; // elemental red (#D80F21)
+    if (eff < 15) return [255, 117, 0];
+    if (eff < 20) return [250, 176, 5];
+    if (eff < 25) return [253, 126, 20];
+    return [216, 15, 33];
   }
 
   /**
@@ -25,13 +23,13 @@ export class ColorCalculator {
    */
   getDayColor(dayIndex) {
     const dayColors = [
-      [255, 117, 0], // safety orange
-      [21, 170, 191], // teal
-      [76, 110, 245], // blue
-      [121, 80, 242], // purple
-      [230, 73, 128], // pink
-      [253, 126, 20], // orange
-      [250, 176, 5], // yellow
+      [255, 117, 0],
+      [21, 170, 191],
+      [76, 110, 245],
+      [121, 80, 242],
+      [230, 73, 128],
+      [253, 126, 20],
+      [250, 176, 5],
     ];
 
     return dayColors[dayIndex % dayColors.length];

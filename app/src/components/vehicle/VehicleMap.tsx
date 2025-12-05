@@ -33,7 +33,7 @@ export default function VehicleMap({ latitude, longitude }: VehicleMapProps) {
       style: new Style({
         image: new CircleStyle({
           radius: 8,
-          fill: new Fill({ color: '#FF4500' }), // Safety Orange
+          fill: new Fill({ color: '#FF4500' }),
           stroke: new Stroke({ color: '#fff', width: 2 }),
         }),
       }),
@@ -51,12 +51,11 @@ export default function VehicleMap({ latitude, longitude }: VehicleMapProps) {
         center: vehicleLocation,
         zoom: 15,
       }),
-      controls: [], // Remove default controls for cleaner look
+      controls: [],
     });
 
     mapInstanceRef.current = map;
 
-    // Add marker
     const marker = new Feature({
       geometry: new Point(vehicleLocation),
     });

@@ -38,14 +38,12 @@ interface FiltersProps {
 function Filters({ data, onFilterChange }: FiltersProps) {
   const [opened, setOpened] = useState(false);
 
-  // Initialize services (Dependency Injection)
   const filterService = useMemo(() => new FilterService(), []);
   const filterStateManager = useMemo(() => new FilterStateManager(), []);
   const metadataService = useMemo(() => new FilterMetadataService(), []);
 
   const [filters, setFiltersState] = useState(filterStateManager.getFilters());
 
-  // Calculate metadata using service
   const metadata = useMemo(() => metadataService.getAllMetadata(data), [data, metadataService]);
 
   const { categories, ranges: stats } = metadata;
@@ -63,10 +61,8 @@ function Filters({ data, onFilterChange }: FiltersProps) {
   };
 
   const applyFilters = (currentFilters) => {
-    // Use service to apply filters
     let filtered = filterService.applyFilters(data, currentFilters);
 
-    // Apply tags filter (special case requiring annotation utility)
     if (currentFilters.tags && currentFilters.tags.length > 0) {
       filtered = filtered.filter((trip) => {
         const tripId = generateTripId(trip);

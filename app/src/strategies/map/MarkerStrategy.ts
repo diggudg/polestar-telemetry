@@ -55,7 +55,6 @@ export class StartMarkerStrategy extends MarkerStrategy {
 export class EndMarkerStrategy extends MarkerStrategy {
   colorCalculator: any;
 
-  // Sanitizer for individual RGB channel values
   static sanitizeRgbComponent(value) {
     const num = Number(value);
     if (Number.isNaN(num)) return 0;
@@ -68,10 +67,9 @@ export class EndMarkerStrategy extends MarkerStrategy {
   }
 
   createMarker(trip, _type, index) {
-    // Use a default efficiency if not provided or invalid
     let efficiency = trip.efficiency;
     if (typeof efficiency !== 'number' || Number.isNaN(efficiency)) {
-      efficiency = 0; // Default to 0 efficiency for trips without valid data
+      efficiency = 0;
     }
 
     let color = this.colorCalculator.getEfficiencyColor(efficiency);
@@ -80,8 +78,7 @@ export class EndMarkerStrategy extends MarkerStrategy {
       EndMarkerStrategy.sanitizeRgbComponent(color[1]),
       EndMarkerStrategy.sanitizeRgbComponent(color[2]),
     ];
-    // Validate that color is a safe RGB array
-    let safeColor = [0, 0, 255]; // default to blue if invalid
+    let safeColor = [0, 0, 255];
     if (
       Array.isArray(color) &&
       color.length === 3 &&

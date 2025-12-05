@@ -43,32 +43,26 @@ function TableView({ data, selectedTripId, onTripSelect }: TableViewProps) {
   const [selectedTripForModal, setSelectedTripForModal] = useState(null);
   const [selectedTripIdForModal, setSelectedTripIdForModal] = useState(null);
 
-  // Pagination state
   const [activePage, setActivePage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState('10');
 
-  // Initialize services (Dependency Injection)
   const dataProcessor = useMemo(() => new TableDataProcessor(), []);
   const rowFormatter = useMemo(() => new TableRowFormatter(), []);
 
-  // Process data using services
   const filteredAndSortedData = useMemo(() => {
     let processed = data;
 
-    // Apply search filter using service
     processed = dataProcessor.filterData(processed, search, [
       'startAddress',
       'endAddress',
       'startDate',
     ]);
 
-    // Apply sorting using service
     processed = dataProcessor.sortData(processed, sortBy, sortOrder);
 
     return processed;
   }, [data, search, sortBy, sortOrder, dataProcessor]);
 
-  // Pagination logic
   const paginatedData = useMemo(() => {
     const pageSize = parseInt(itemsPerPage, 10);
     const start = (activePage - 1) * pageSize;
@@ -79,14 +73,13 @@ function TableView({ data, selectedTripId, onTripSelect }: TableViewProps) {
   const totalPages = Math.ceil(filteredAndSortedData.length / parseInt(itemsPerPage, 10));
 
   const handleOpenModal = (trip, e) => {
-    e.stopPropagation(); // Prevent row selection when clicking edit button
+    e.stopPropagation();
     setSelectedTripForModal(trip);
     setSelectedTripIdForModal(generateTripId(trip));
     setModalOpened(true);
   };
 
   const handleSaveAnnotation = () => {
-    // Refresh handled by modal close
   };
 
   interface ThProps {
@@ -126,7 +119,6 @@ function TableView({ data, selectedTripId, onTripSelect }: TableViewProps) {
     const hasNotes = annotation.notes?.length > 0;
     const hasTags = annotation.tags?.length > 0;
 
-    // Use formatter service for consistent formatting
     const efficiency = rowFormatter.formatEfficiency(trip.efficiency);
     const socRange = rowFormatter.formatSOCRange(trip.socSource, trip.socDestination);
 
@@ -200,7 +192,7 @@ function TableView({ data, selectedTripId, onTripSelect }: TableViewProps) {
           value={search}
           onChange={(e) => {
             setSearch(e.currentTarget.value);
-            setActivePage(1); // Reset to first page on search
+            setActivePage(1);
           }}
         />
         <Group grow>

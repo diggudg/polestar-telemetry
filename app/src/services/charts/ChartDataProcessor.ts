@@ -118,7 +118,6 @@ export class ChartDataProcessor {
     const consumptionByHour = {};
 
     data.forEach((trip) => {
-      // Extract hour from startDate format: "YYYY-MM-DD, HH:MM"
       const timePart = trip.startDate.split(',')[1]?.trim();
       if (!timePart) return;
 
@@ -151,29 +150,25 @@ export class ChartDataProcessor {
    * @returns {Object} Charging statistics and sessions
    */
   processChargingSessions(data) {
-    // Ensure data is sorted by date
     const sortedData = [...data].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
     const sessions = [];
     let totalChargedKwh = 0;
 
-    // Battery capacity estimation (Polestar 2 Long Range is ~75-78 kWh usable)
     const BATTERY_CAPACITY_KWH = 75;
 
     for (let i = 0; i < sortedData.length - 1; i++) {
       const currentTrip = sortedData[i];
       const nextTrip = sortedData[i + 1];
 
-      // If SOC at start of next trip is significantly higher than SOC at end of current trip
       if (nextTrip.socSource > currentTrip.socDestination + 2) {
-        // +2% buffer for fluctuation
         const socDiff = nextTrip.socSource - currentTrip.socDestination;
         const kwhAdded = (socDiff / 100) * BATTERY_CAPACITY_KWH;
 
         totalChargedKwh += kwhAdded;
 
         sessions.push({
-          date: currentTrip.endDate, // Assumed charged after this trip
-          location: currentTrip.endAddress, // Assumed charged at destination of this trip
+          date: currentTrip.endDate,
+          location: currentTrip.endAddress,
           lat: currentTrip.endLat,
           lng: currentTrip.endLng,
           socStart: currentTrip.socDestination,
@@ -184,7 +179,6 @@ export class ChartDataProcessor {
       }
     }
 
-    // Group by location
     const locationStats = sessions.reduce((acc, session) => {
       const loc = session.location || 'Unknown';
       if (!acc[loc]) {
@@ -222,9 +216,8 @@ export class ChartDataProcessor {
   processRouteAnalysis(data) {
     const routes = {};
 
-    // Helper to calculate Haversine distance (crow-flies)
     const getCrowFliesDistance = (lat1, lon1, lat2, lon2) => {
-      const R = 6371; // Radius of the earth in km
+      const R = 6371;
       const dLat = (lat2 - lat1) * (Math.PI / 180);
       const dLon = (lon2 - lon1) * (Math.PI / 180);
       const a =
@@ -237,7 +230,6 @@ export class ChartDataProcessor {
       return R * c;
     };
 
-    // Helper to create a unique key for a route (approximate coordinates to group nearby points)
     const getCoordKey = (lat, lng) => `${lat.toFixed(3)},${lng.toFixed(3)}`;
 
     data.forEach((trip) => {
@@ -272,14 +264,11 @@ export class ChartDataProcessor {
       routes[routeKey].trips.push(trip);
     });
 
-    // Process aggregated route data
     const processedRoutes = Object.values(routes).map((route) => {
       const avgDistance = route.totalDistance / route.count;
       const avgConsumption = route.totalConsumption / route.count;
       const avgEfficiency = (avgConsumption / avgDistance) * 100;
 
-      // Detour factor: How much longer is the driven path vs straight line?
-      // > 1.5 usually implies inefficient routing or winding roads
       const detourFactor = route.crowFliesDistance > 0 ? avgDistance / route.crowFliesDistance : 1;
 
       return {
@@ -297,7 +286,7 @@ export class ChartDataProcessor {
       .slice(0, 10);
 
     const inefficientRoutes = processedRoutes
-      .filter((r) => r.detourFactor > 1.5 && r.avgDistance > 5) // Filter out short parking moves
+      .filter((r) => r.detourFactor > 1.5 && r.avgDistance > 5)
       .sort((a, b) => b.detourFactor - a.detourFactor)
       .slice(0, 10);
 
@@ -315,11 +304,6 @@ export class ChartDataProcessor {
   processSpeedVsEfficiency(data) {
     return data
       .map((trip) => {
-        // Parse dates manually if needed, but assuming standard format or Date objects
-        // The file shows split(',')[0] usage, so strings: "YYYY-MM-DD, HH:MM"
-        // Let's rely on standard Date parsing which usually handles "YYYY-MM-DD, HH:MM" or similar
-        // If not, we might need robust parsing.
-        // Existing code uses `new Date(trip.startDate)`.
         const start = new Date(trip.startDate);
         const end = new Date(trip.endDate);
         const durationHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
@@ -336,6 +320,6 @@ export class ChartDataProcessor {
           category: trip.category,
         };
       })
-      .filter((d) => d.speed > 5 && d.speed < 180 && d.distance > 2 && d.efficiency < 100); // Filter outliers (parking, errors)
+      .filter((d) => d.speed > 5 && d.speed < 180 && d.distance > 2 && d.efficiency < 100);
   }
 }

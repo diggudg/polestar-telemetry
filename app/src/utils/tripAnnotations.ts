@@ -1,4 +1,3 @@
-// Trip annotations storage using localStorage
 const STORAGE_KEY = 'polestar-trip-annotations';
 
 export const getTripAnnotations = () => {
@@ -36,12 +35,10 @@ export const deleteTripAnnotation = (tripId) => {
   saveTripAnnotations(annotations);
 };
 
-// Generate unique trip ID based on trip data
 export const generateTripId = (trip) => {
   return `${trip.startDate}-${trip.startOdometer}-${trip.endOdometer}`;
 };
 
-// Get all unique tags from all annotations
 export const getAllTags = () => {
   const annotations = getTripAnnotations();
   const allTags = new Set();

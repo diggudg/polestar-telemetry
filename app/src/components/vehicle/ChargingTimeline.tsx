@@ -25,17 +25,14 @@ export default function ChargingTimeline({ chargeTimer }: ChargingTimelineProps)
   const stopMinute = timer?.stop?.minute ?? 0;
   const isActivated = timer?.activated ?? false;
 
-  // Calculate timeline percentages
   const startPercent = ((startHour * 60 + startMinute) / (24 * 60)) * 100;
   const stopPercent = ((stopHour * 60 + stopMinute) / (24 * 60)) * 100;
   const duration = stopPercent - startPercent;
 
-  // Get current time position
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const currentPercent = (currentMinutes / (24 * 60)) * 100;
 
-  // Check if currently in charging window
   const inWindow =
     currentMinutes >= startHour * 60 + startMinute && currentMinutes <= stopHour * 60 + stopMinute;
 

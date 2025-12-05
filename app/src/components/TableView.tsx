@@ -25,7 +25,6 @@ function TableView({ data }) {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [selectedTripId, setSelectedTripId] = useState(null);
 
-  // Pagination state
   const [activePage, setActivePage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState('10');
 
@@ -59,7 +58,6 @@ function TableView({ data }) {
     return filtered;
   }, [data, search, sortBy, sortOrder]);
 
-  // Pagination logic
   const paginatedData = useMemo(() => {
     const pageSize = parseInt(itemsPerPage, 10);
     const start = (activePage - 1) * pageSize;
@@ -84,7 +82,6 @@ function TableView({ data }) {
   };
 
   const handleSaveAnnotation = () => {
-    // Refresh handled by modal close
   };
 
   const rows = paginatedData.map((trip) => {
@@ -155,7 +152,7 @@ function TableView({ data }) {
             value={search}
             onChange={(e) => {
               setSearch(e.currentTarget.value);
-              setActivePage(1); // Reset to first page on search
+              setActivePage(1);
             }}
             style={{ flex: 1 }}
           />

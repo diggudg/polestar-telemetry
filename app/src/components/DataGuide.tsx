@@ -13,7 +13,6 @@ import {
 } from '@mantine/core';
 import { IconCalculator, IconChartBar, IconInfoCircle, IconMap } from '@tabler/icons-react';
 
-// Reusable Paper with colored left border
 function BorderedPaper({ borderColor, style, ...props }) {
   return (
     <Paper

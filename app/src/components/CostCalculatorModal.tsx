@@ -26,12 +26,10 @@ interface CostCalculatorModalProps {
 function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModalProps) {
   const { colorScheme } = useMantineColorScheme();
 
-  // --- Global Settings ---
   const [currency, setCurrency] = useState('USD');
   const [homeRate, setHomeRate] = useState(0.16);
   const [publicRate, setPublicRate] = useState(0.45);
 
-  // --- Historical Analysis State ---
   const [homeChargingPercent, setHomeChargingPercent] = useState(80);
 
   const publicChargingPercent = 100 - homeChargingPercent;
@@ -53,7 +51,6 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
     setHomeChargingPercent(100 - clampPercent(value));
   };
 
-  // --- Constants ---
   const currencySymbols: Record<string, string> = {
     USD: '$',
     EUR: '€',
@@ -90,8 +87,6 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
   };
   const symbol = currencySymbols[currency] || currency;
 
-  // --- Calculations ---
-
   const toNumber = (value: string | number | null | undefined) => {
     if (value === null || value === undefined) return 0;
     const parsed = typeof value === 'number' ? value : Number(value);
@@ -119,7 +114,6 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
   };
 
   const histCosts = calculateHistoricalCosts();
-  // const tripStats = calculateTripStats(); // Removed
 
   const glassStyle = {
     backgroundColor: colorScheme === 'dark' ? 'rgba(36, 36, 36, 0.7)' : 'rgba(255, 255, 255, 0.8)',
@@ -146,7 +140,7 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
       radius="lg"
       padding="lg"
       overlayProps={{ backgroundOpacity: 0.55, blur: 5 }}
-      styles={{ title: { paddingLeft: '8px' } }} // Fix header padding
+      styles={{ title: { paddingLeft: '8px' } }}
     >
       <Stack gap="xl">
         {/* --- Global Settings Bar --- */}

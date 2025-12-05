@@ -47,7 +47,6 @@ export default function ClimateControl({ climatization }: ClimateControlProps) {
   const runtimeLeft = climatization.runtimeLeftMinutes || 0;
   const ventilation = climatization.ventilation?.replace('VENTILATION_', '') || 'Off';
 
-  // Seat heating levels
   const getHeatingLevel = (intensity: string) => {
     if (!intensity || intensity === 'HEATING_INTENSITY_UNSPECIFIED') return 0;
     if (intensity.includes('LOW')) return 1;

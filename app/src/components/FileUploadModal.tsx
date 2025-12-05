@@ -47,7 +47,6 @@ const FileUploadModal = ({ opened, onClose, onDataLoaded }: FileUploadModalProps
         });
       }
     } else {
-      // JSON files
       const reader = new FileReader();
       reader.onload = (e) => {
         try {

@@ -20,7 +20,6 @@ import {
 
 function ChartsView({ data }) {
   const chartData = useMemo(() => {
-    // Distance over time
     const distanceByDate = data.reduce((acc, trip) => {
       const date = trip.startDate.split(',')[0];
       if (!acc[date]) {
@@ -34,9 +33,8 @@ function ChartsView({ data }) {
 
     const timeSeriesData = Object.values(distanceByDate)
       .sort((a, b) => new Date(a.date) - new Date(b.date))
-      .slice(-30); // Last 30 days
+      .slice(-30);
 
-    // Efficiency distribution
     const efficiencyData = data
       .filter((trip) => trip.efficiency > 0 && trip.efficiency < 50)
       .map((trip) => ({
@@ -45,7 +43,6 @@ function ChartsView({ data }) {
       }))
       .sort((a, b) => a.efficiency - b.efficiency);
 
-    // Trip distance distribution
     const distanceRanges = [
       { range: '0-5 km', min: 0, max: 5, count: 0 },
       { range: '5-10 km', min: 5, max: 10, count: 0 },
@@ -59,7 +56,6 @@ function ChartsView({ data }) {
       if (range) range.count++;
     });
 
-    // SOC analysis
     const socData = data.slice(-20).map((trip, idx) => ({
       trip: `Trip ${idx + 1}`,
       startSOC: trip.socSource,

@@ -21,11 +21,10 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
   const itemsPerPage = 5;
 
   useEffect(() => {
-    // Initialize state with anomalies when they change
     setItems(
       anomalies.map((a) => ({
         ...a,
-        action: 'keep', // default action
+        action: 'keep',
         editedDistance: a.trip.distanceKm,
         editedConsumption: a.trip.consumptionKwh,
       }))
@@ -41,13 +40,11 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
   const handleEditChange = (index, field, value) => {
     const newItems = [...items];
     newItems[index][field] = value;
-    // Auto-switch to 'correct' action if user edits
     newItems[index].action = 'correct';
     setItems(newItems);
   };
 
   const handleApply = () => {
-    // Process the decisions
     const corrections = items.map((item) => ({
       tripIndex: item.tripIndex,
       action: item.action,
@@ -66,7 +63,6 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
   const paginatedItems = items.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage);
 
   const rows = paginatedItems.map((item, index) => {
-    // Adjust index for global tracking if needed, but here we use item.tripIndex
     const actualIndex = (activePage - 1) * itemsPerPage + index;
     return (
       <Table.Tr

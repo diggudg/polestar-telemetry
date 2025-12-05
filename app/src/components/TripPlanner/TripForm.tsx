@@ -18,72 +18,35 @@ import {
   IconMapPin,
 } from '@tabler/icons-react';
 import { useState } from 'react';
-
-interface LocationOption {
-  label: string;
-  value: string;
-  lat: string;
-  lon: string;
-}
+import { useLocationSearch } from '../../hooks/useLocationSearch';
+import { PlanTripHandler } from '../../hooks/useTripPlanner';
+import { Coordinate, TripPlanPayload } from '../../types/tripPlanner';
 
 interface TripFormProps {
-  onPlanTrip: (
-    start: [number, number],
-    end: [number, number],
-    currentSoc: number,
-    targetSoc: number,
-    avgConsumption: number,
-    currency: string,
-    homeRate: number,
-    publicRate: number
-  ) => void;
+  onPlanTrip: PlanTripHandler;
   loading: boolean;
 }
 
 export default function TripForm({ onPlanTrip, loading }: TripFormProps) {
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
-  const [startCoords, setStartCoords] = useState<[number, number] | null>(null);
-  const [endCoords, setEndCoords] = useState<[number, number] | null>(null);
+  const [startCoords, setStartCoords] = useState<Coordinate | null>(null);
+  const [endCoords, setEndCoords] = useState<Coordinate | null>(null);
 
   const [currentSoc, setCurrentSoc] = useState<number | ''>(80);
   const [targetSoc, setTargetSoc] = useState<number | ''>(10);
-  const [avgConsumption, setAvgConsumption] = useState<number | ''>(19.5); // Default Polestar 2 consumption
+  const [avgConsumption, setAvgConsumption] = useState<number | ''>(19.5);
 
   const [currency, setCurrency] = useState('USD');
   const [homeRate, setHomeRate] = useState<number | ''>(0.16);
   const [publicRate, setPublicRate] = useState<number | ''>(0.45);
 
-  const [locationOptions, setLocationOptions] = useState<LocationOption[]>([]);
-
+  const { options, search } = useLocationSearch();
   const startCombobox = useCombobox();
   const endCombobox = useCombobox();
 
-  const fetchLocations = async (query: string) => {
-    if (query.length < 3) return [];
-    try {
-      const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        query
-      )}&limit=5`;
-      const response = await fetch(searchUrl, {
-        headers: { 'User-Agent': 'Polestar Telemetry' },
-      });
-      const data = await response.json();
-      const options = data.map((place: any) => ({
-        label: place.display_name,
-        value: place.display_name,
-        lat: place.lat,
-        lon: place.lon,
-      }));
-      setLocationOptions(options);
-    } catch (e) {
-      console.error(e);
-      setLocationOptions([]);
-    }
-  };
-
   const handleSearch = useDebouncedCallback((query: string) => {
-    fetchLocations(query);
+    search(query);
   }, 500);
 
   const handleSubmit = () => {
@@ -96,16 +59,18 @@ export default function TripForm({ onPlanTrip, loading }: TripFormProps) {
       typeof homeRate === 'number' &&
       typeof publicRate === 'number'
     ) {
-      onPlanTrip(
-        startCoords,
-        endCoords,
+      const payload: TripPlanPayload = {
+        start: startCoords as Coordinate,
+        end: endCoords as Coordinate,
         currentSoc,
         targetSoc,
         avgConsumption,
         currency,
         homeRate,
-        publicRate
-      );
+        publicRate,
+      };
+
+      void onPlanTrip(payload);
     }
   };
 
@@ -117,8 +82,8 @@ export default function TripForm({ onPlanTrip, loading }: TripFormProps) {
           store={startCombobox}
           onOptionSubmit={(val) => {
             setStartLocation(val);
-            const opt = locationOptions.find((o) => o.value === val);
-            if (opt) setStartCoords([parseFloat(opt.lat), parseFloat(opt.lon)]);
+            const opt = options.find((o) => o.value === val);
+            if (opt) setStartCoords([opt.latitude, opt.longitude]);
             startCombobox.closeDropdown();
           }}
         >
@@ -137,7 +102,7 @@ export default function TripForm({ onPlanTrip, loading }: TripFormProps) {
           </Combobox.Target>
           <Combobox.Dropdown>
             <Combobox.Options>
-              {locationOptions.map((opt) => (
+              {options.map((opt) => (
                 <Combobox.Option value={opt.value} key={opt.value}>
                   {opt.label}
                 </Combobox.Option>
@@ -151,8 +116,8 @@ export default function TripForm({ onPlanTrip, loading }: TripFormProps) {
           store={endCombobox}
           onOptionSubmit={(val) => {
             setEndLocation(val);
-            const opt = locationOptions.find((o) => o.value === val);
-            if (opt) setEndCoords([parseFloat(opt.lat), parseFloat(opt.lon)]);
+            const opt = options.find((o) => o.value === val);
+            if (opt) setEndCoords([opt.latitude, opt.longitude]);
             endCombobox.closeDropdown();
           }}
         >
@@ -171,7 +136,7 @@ export default function TripForm({ onPlanTrip, loading }: TripFormProps) {
           </Combobox.Target>
           <Combobox.Dropdown>
             <Combobox.Options>
-              {locationOptions.map((opt) => (
+              {options.map((opt) => (
                 <Combobox.Option value={opt.value} key={opt.value}>
                   {opt.label}
                 </Combobox.Option>

@@ -33,17 +33,14 @@ export class TableDataProcessor {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
 
-      // Handle date sorting
       if (sortBy === 'startDate' || sortBy === 'endDate') {
         aVal = new Date(aVal);
         bVal = new Date(bVal);
       }
-      // Handle numeric sorting
       else if (typeof aVal === 'number' || !Number.isNaN(parseFloat(aVal))) {
         aVal = parseFloat(aVal);
         bVal = parseFloat(bVal);
       }
-      // Handle string sorting
       else if (typeof aVal === 'string') {
         aVal = aVal.toLowerCase();
         bVal = bVal.toLowerCase();
@@ -95,12 +92,10 @@ export class TableDataProcessor {
   processTableData(data, options: any = {}) {
     let processed = [...data];
 
-    // Apply search filter
     if (options.searchQuery) {
       processed = this.filterData(processed, options.searchQuery, options.searchFields || []);
     }
 
-    // Apply sorting
     if (options.sortBy) {
       processed = this.sortData(processed, options.sortBy, options.sortOrder || 'asc');
     }
@@ -215,15 +210,12 @@ export class TableExporter {
    * @returns {string} CSV string
    */
   exportToCSV(data, columns) {
-    // Create header row
     const headers = columns.map((col) => col.label || col.key).join(',');
 
-    // Create data rows
     const rows = data.map((row) => {
       return columns
         .map((col) => {
           const value = row[col.key];
-          // Handle values that contain commas or quotes
           if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
             return `"${value.replace(/"/g, '""')}"`;
           }

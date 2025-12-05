@@ -25,12 +25,9 @@ export class FeatureBuilder {
     let lineGeometry: LineString;
 
     if (geometry) {
-      // If we have a real route geometry (GeoJSON coordinates)
-      // OSRM returns [lon, lat], so we need to transform each point
       const points = geometry.map((coord) => fromLonLat(coord));
       lineGeometry = new LineString(points);
     } else {
-      // Fallback to straight line
       lineGeometry = new LineString([
         fromLonLat([trip.startLng, trip.startLat]),
         fromLonLat([trip.endLng, trip.endLat]),

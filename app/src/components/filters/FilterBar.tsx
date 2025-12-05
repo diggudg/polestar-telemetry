@@ -29,14 +29,12 @@ interface FilterBarProps {
 }
 
 export default function FilterBar({ data, onFilterChange }: FilterBarProps) {
-  // Initialize services
   const filterService = useMemo(() => new FilterService(), []);
   const filterStateManager = useMemo(() => new FilterStateManager(), []);
   const metadataService = useMemo(() => new FilterMetadataService(), []);
 
   const [filters, setFiltersState] = useState(filterStateManager.getFilters());
 
-  // Calculate metadata
   const metadata = useMemo(() => metadataService.getAllMetadata(data), [data, metadataService]);
 
   const { categories, ranges: stats } = metadata;
@@ -56,7 +54,6 @@ export default function FilterBar({ data, onFilterChange }: FilterBarProps) {
   const applyFilters = (currentFilters: any) => {
     let filtered = filterService.applyFilters(data, currentFilters);
 
-    // Apply tags filter
     if (currentFilters.tags && currentFilters.tags.length > 0) {
       filtered = filtered.filter((trip) => {
         const tripId = generateTripId(trip);

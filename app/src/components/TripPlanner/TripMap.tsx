@@ -9,15 +9,13 @@ import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Icon, Stroke, Style } from 'ol/style';
 import { useEffect, useRef } from 'react';
-
-// Reusing icons from strategies if possible, or defining inline for simplicity
-// We'll define inline nicely.
+import { Coordinate, RouteGeometry, Waypoint } from '../../types/tripPlanner';
 
 interface TripMapProps {
-  start: [number, number] | null; // [lat, lon]
-  end: [number, number] | null;
-  routeGeometry: [number, number][] | null; // Array of [lon, lat] from OSRM
-  waypoints: { lat: number; lon: number; label: string; type: 'charger' | 'stop' }[];
+  start: Coordinate | null;
+  end: Coordinate | null;
+  routeGeometry: RouteGeometry | null;
+  waypoints: Waypoint[];
 }
 
 export default function TripMap({ start, end, routeGeometry, waypoints }: TripMapProps) {
@@ -44,7 +42,7 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
         center: fromLonLat([0, 0]),
         zoom: 2,
       }),
-      controls: defaultControls({ zoom: false, attribution: false }), // Minimal controls
+      controls: defaultControls({ zoom: false, attribution: false }),
     });
 
     mapInstance.current = map;
@@ -61,7 +59,6 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
 
     const features: Feature[] = [];
 
-    // Start Marker
     if (start) {
       const startFeature = new Feature({
         geometry: new Point(fromLonLat([start[1], start[0]])),
@@ -69,19 +66,13 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       startFeature.setStyle(
         new Style({
           image: new Icon({
-            src: 'https://cdn-icons-png.flaticon.com/512/64/64113.png', // Generic location pin or similar
-            // For now let's use a simple circle if we don't have assets,
-            // but user had a specific style.
-            // Let's use Polestar Orange Circle
-            // Actually, SVG icons are better.
-            // I'll create a simple function for styles.
+            src: 'https://cdn-icons-png.flaticon.com/512/64/64113.png',
             color: '#FF7500',
-            scale: 0.05, // that icon is huge
+            scale: 0.05,
             crossOrigin: 'anonymous',
           }),
         })
       );
-      // Fallback style if icon fails or just circle
       const circleStyle = new Style({
         image: new Icon({
           src: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FF7500" width="24px" height="24px"><circle cx="12" cy="12" r="10"/></svg>',
@@ -92,14 +83,13 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       features.push(startFeature);
     }
 
-    // End Marker
     if (end) {
       const endFeature = new Feature({
         geometry: new Point(fromLonLat([end[1], end[0]])),
       });
       const endStyle = new Style({
         image: new Icon({
-          src: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>', // Flag icon
+          src: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>',
           scale: 1.5,
           color: '#000000',
         }),
@@ -108,7 +98,6 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       features.push(endFeature);
     }
 
-    // Route Line
     if (routeGeometry && routeGeometry.length > 0) {
       const lineString = new LineString(routeGeometry.map((coord) => fromLonLat(coord)));
       const routeFeature = new Feature({
@@ -117,7 +106,7 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       routeFeature.setStyle(
         new Style({
           stroke: new Stroke({
-            color: '#339af0', // Blue
+            color: '#339af0',
             width: 4,
           }),
         })
@@ -125,7 +114,6 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       features.push(routeFeature);
     }
 
-    // Waypoints (Chargers)
     waypoints.forEach((wp) => {
       const wpFeature = new Feature({
         geometry: new Point(fromLonLat([wp.lon, wp.lat])),
@@ -133,7 +121,7 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       wpFeature.setStyle(
         new Style({
           image: new Icon({
-            src: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FCC419" width="24px" height="24px"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>', // Lightning
+            src: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FCC419" width="24px" height="24px"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>',
             scale: 1.2,
           }),
         })

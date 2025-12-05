@@ -40,7 +40,6 @@ export class MapService {
    * @returns {Map} OpenLayers Map instance
    */
   initializeMap(target, center, layerType = 'osm') {
-    // Create overlay for popups
     const overlayElement = document.createElement('div');
     overlayElement.className = 'ol-popup';
     overlayElement.style.cssText = `
@@ -60,10 +59,8 @@ export class MapService {
       autoPanAnimation: { duration: 250 },
     });
 
-    // Create tile layer
     this.tileLayer = this.tileLayerFactory.createLayer(layerType);
 
-    // Create map
     this.map = new OlMap({
       target,
       layers: [this.tileLayer],
@@ -91,7 +88,6 @@ export class MapService {
       overlays: [this.overlay],
     });
 
-    // Initialize heatmap layer
     this.heatmapLayer = new Heatmap({
       source: new VectorSource(),
       blur: 15,
@@ -110,7 +106,6 @@ export class MapService {
    * Setup map event handlers
    */
   setupEventHandlers() {
-    // Click handler for popups
     this.map.on('click', (evt) => {
       const feature = this.map.forEachFeatureAtPixel(evt.pixel, (feature) => feature);
 
@@ -126,7 +121,6 @@ export class MapService {
       }
     });
 
-    // Cursor change on hover
     this.map.on('pointermove', (evt) => {
       const hit = this.map.forEachFeatureAtPixel(evt.pixel, () => true);
       this.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
@@ -194,7 +188,6 @@ export class MapService {
   updateFeatures(features, heatmapFeatures) {
     if (!this.map) return;
 
-    // Remove existing vector layers
     this.map
       .getLayers()
       .getArray()
@@ -203,7 +196,6 @@ export class MapService {
         this.map.removeLayer(layer);
       });
 
-    // Add new vector layer
     const vectorLayer = new VectorLayer({
       source: new VectorSource({ features }),
       updateWhileAnimating: true,
@@ -211,7 +203,6 @@ export class MapService {
     });
     this.map.addLayer(vectorLayer);
 
-    // Update heatmap
     if (this.heatmapLayer) {
       const heatmapSource = this.heatmapLayer.getSource();
       heatmapSource.clear();

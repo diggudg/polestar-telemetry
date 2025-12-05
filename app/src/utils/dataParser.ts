@@ -1,12 +1,8 @@
 import ExcelJS from 'exceljs';
 import Papa from 'papaparse';
 
-// Constants for carbon calculations
-// Average ICE car fuel consumption (L/100km) -- US EPA average
 export const AVG_ICE_FUEL_CONSUMPTION = 8.9;
-// Gasoline produces ~2.31 kg CO2 per liter
 export const CO2_PER_LITER_GASOLINE = 2.31;
-// One tree absorbs ~21kg CO2/year
 export const TREE_CO2_ABSORPTION_PER_YEAR = 21;
 
 export const parseCSV = (file) => {
@@ -16,7 +12,6 @@ export const parseCSV = (file) => {
       dynamicTyping: true,
       skipEmptyLines: true,
       complete: (results) => {
-        // Optionally detect columns or allow mapping as a second argument
         const defaultMapping = {
           distanceKm: 'Distance in KM',
           startDate: 'Start Date',
@@ -51,25 +46,21 @@ export const parseXLSX = async (file) => {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(arrayBuffer);
 
-    // Get the first worksheet
     const worksheet = workbook.worksheets[0];
 
     if (!worksheet) {
       throw new Error('No worksheet found in the Excel file');
     }
 
-    // Convert worksheet to JSON
     const jsonData = [];
     const headers = [];
 
-    // Get headers from the first row
     worksheet.getRow(1).eachCell((cell, colNumber) => {
       headers[colNumber] = cell.value;
     });
 
-    // Process data rows
     worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) return; // Skip header row
+      if (rowNumber === 1) return;
 
       const rowData = {};
       row.eachCell((cell, colNumber) => {
@@ -84,7 +75,6 @@ export const parseXLSX = async (file) => {
       }
     });
 
-    // Provide the mapping for Excel
     const defaultMapping = {
       distanceKm: 'Distance in KM',
       startDate: 'Start Date',
@@ -120,7 +110,6 @@ const calculateEfficiency = (consumption, distance) => {
 };
 
 const processJourneyData = (rawData, mapping) => {
-  // Use provided mapping, fallback to defaults if not specified
   const m = mapping || {
     distanceKm: 'Distance in KM',
     startDate: 'Start Date',
@@ -141,7 +130,7 @@ const processJourneyData = (rawData, mapping) => {
     comments: 'Comments',
   };
   return rawData
-    .filter((row) => parseFloat(row[m.distanceKm]) > 0) // Filter out zero-distance entries
+    .filter((row) => parseFloat(row[m.distanceKm]) > 0)
     .map((row, index) => ({
       id: index,
       startDate: row[m.startDate],
@@ -161,7 +150,6 @@ const processJourneyData = (rawData, mapping) => {
       socSource: parseInt(row[m.socSource], 10) || 0,
       socDestination: parseInt(row[m.socDestination], 10) || 0,
       comments: row[m.comments] || '',
-      // Calculated fields
       efficiency: calculateEfficiency(row[m.consumptionKwh], row[m.distanceKm]),
       socDrop: (parseInt(row[m.socSource], 10) || 0) - (parseInt(row[m.socDestination], 10) || 0),
     }));
@@ -175,15 +163,12 @@ export const calculateStatistics = (data) => {
   const avgEfficiency = calculateEfficiency(totalConsumption, totalDistance);
 
   const efficiencies = data
-    .filter((trip) => trip.efficiency > 0 && trip.distanceKm > 2) // Filter out short trips (< 2km) and zero efficiency
+    .filter((trip) => trip.efficiency > 0 && trip.distanceKm > 2)
     .map((trip) => parseFloat(trip.efficiency));
 
-  // Carbon savings calculation
-  // Average ICE car: 8.9 L/100km (US EPA average)
-  // Gas produces ~2.31 kg CO2 per liter
-  const gasConsumed = (totalDistance / 100) * AVG_ICE_FUEL_CONSUMPTION; // liters
-  const co2Saved = gasConsumed * CO2_PER_LITER_GASOLINE; // kg
-  const treesEquivalent = co2Saved / TREE_CO2_ABSORPTION_PER_YEAR; // One tree absorbs ~21kg CO2/year
+  const gasConsumed = (totalDistance / 100) * AVG_ICE_FUEL_CONSUMPTION;
+  const co2Saved = gasConsumed * CO2_PER_LITER_GASOLINE;
+  const treesEquivalent = co2Saved / TREE_CO2_ABSORPTION_PER_YEAR;
 
   return {
     totalTrips: data.length,
@@ -194,7 +179,6 @@ export const calculateStatistics = (data) => {
     worstEfficiency: efficiencies.length > 0 ? Math.max(...efficiencies).toFixed(2) : 0,
     avgTripDistance: (totalDistance / data.length).toFixed(2),
     ...(() => {
-      // Find min startOdometer and max endOdometer in a single pass
       const { minStart, maxEnd } = data.reduce(
         (acc, t) => ({
           minStart: Math.min(acc.minStart, t.startOdometer),

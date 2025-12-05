@@ -23,7 +23,6 @@ function App() {
     useDisclosure(false);
   const [costCalculatorSignal, setCostCalculatorSignal] = useState(0);
 
-  // Anomaly Handling
   const [anomalies, setAnomalies] = useState([]);
   const [pendingJourneyData, setPendingJourneyData] = useState(null);
   const [anomalyModalOpened, { open: openAnomalyModal, close: closeAnomalyModal }] =
@@ -45,15 +44,8 @@ function App() {
   };
 
   const handleAnomalyCorrection = (corrections) => {
-    // Apply corrections to pendingJourneyData
     const cleanedData = [...pendingJourneyData];
 
-    // Sort corrections descending by index to handle deletions without shifting issues
-    // But we map by ID or index. The modal uses index.
-    // Corrections array: { tripIndex, action, newData }
-
-    // We need to handle 'skip' (delete) and 'correct' (update)
-    // Let's create a map or set of indices to remove
     const indicesToRemove = new Set();
     const updates = new Map();
 
@@ -68,14 +60,6 @@ function App() {
     const finalData = cleanedData
       .filter((_item, index) => !indicesToRemove.has(index))
       .map((item, index) => {
-        // If this index is being removed, filter moved it out mostly.
-        // Wait, filter runs on all. We need original index.
-        // The issue is filter re-indexes.
-        // Better: map first, then filter nulls? Or standard loop.
-        // Actually, our anomaly modal uses the index from the *original* array passed to it.
-        // pendingJourneyData is that array.
-        // So we should iterate over pendingJourneyData.
-
         if (indicesToRemove.has(index)) return null;
 
         if (updates.has(index)) {
@@ -83,7 +67,7 @@ function App() {
         }
         return item;
       })
-      .filter(Boolean); // Remove nulls (skipped items)
+      .filter(Boolean);
 
     setJourneyData(finalData);
     setPendingJourneyData(null);
@@ -142,14 +126,6 @@ function App() {
       case 'vehicle':
       case 'charging':
       case 'health': {
-        // Pass the specific tab to VehicleStatus if it handles sub-tabs,
-        // or we can handle routing here.
-        // The original Dashboard had sub-tabs for vehicle.
-        // Let's reuse VehicleStatus and pass the active sub-tab.
-        // We might need to map 'vehicle', 'charging', 'health' to what VehicleStatus expects.
-        // VehicleStatus expects: 'overview', 'health', 'air', 'climate', 'charging', 'stats'
-        // Our MainLayout emits 'vehicle', 'charging', 'health'.
-        // Let's map them.
         let subTab = 'overview';
         if (activeTab === 'charging') subTab = 'charging';
         if (activeTab === 'health') subTab = 'health';
@@ -160,12 +136,6 @@ function App() {
             charging={chargingData}
             activeTab={subTab}
             onUpload={(_file) => {
-              // This callback in VehicleStatus was for charging data upload.
-              // We can reuse the modal or keep it as is if it uses internal logic.
-              // But VehicleStatus uses onUpload prop to bubble up file.
-              // Let's just open our modal? No, VehicleStatus might expect immediate file handling.
-              // Let's check VehicleStatus implementation later. For now, pass a dummy or handle it.
-              // Actually, let's just open the global modal for simplicity if the user wants to upload.
               openUploadModal();
             }}
           />

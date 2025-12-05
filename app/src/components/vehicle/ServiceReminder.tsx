@@ -23,12 +23,6 @@ interface ServiceReminderProps {
   health: any;
 }
 
-// Color logic based on Polestar Design System:
-// - Critical/Urgent (<=7 days or <=500km): polestarRed (elementalRed)
-// - Soon (<=30 days or <=1000km): orange (safetyOrange)
-// - OK/Active: polestarOrange (safety orange)
-// - Neutral/Inactive: polestarGrey
-
 const getServiceColor = (daysToService: number, distanceToService: number) => {
   if (daysToService <= 7 || distanceToService <= 500) return 'polestarRed';
   if (daysToService <= 30 || distanceToService <= 1000) return 'orange';
@@ -60,7 +54,6 @@ export default function ServiceReminder({ health }: ServiceReminderProps) {
   const distanceToService = health.distanceToServiceKm || 0;
   const hoursToService = health.engineHoursToService || 0;
 
-  // Assume 30k km / 730 days (2 years) / 1500 hours service interval
   const distanceProgress = Math.min(100, ((30000 - distanceToService) / 30000) * 100);
   const daysProgress = Math.min(100, ((730 - daysToService) / 730) * 100);
   const hoursProgress = Math.min(100, ((1500 - hoursToService) / 1500) * 100);
@@ -69,7 +62,6 @@ export default function ServiceReminder({ health }: ServiceReminderProps) {
   const serviceStatus = getServiceStatus(daysToService, distanceToService);
   const StatusIcon = serviceStatus.icon;
 
-  // Individual thresholds for colors
   const daysColor =
     daysToService <= 7 ? 'polestarRed' : daysToService <= 30 ? 'orange' : 'polestarOrange';
   const distanceColor =
@@ -81,8 +73,6 @@ export default function ServiceReminder({ health }: ServiceReminderProps) {
   const hoursColor =
     hoursToService <= 7 ? 'polestarRed' : hoursToService <= 30 ? 'orange' : 'polestarOrange';
 
-  // 12V Battery status
-  // 12V Battery status
   const lowBatteryWarning = health.lowVoltageBatteryWarning?.includes('WARNING');
   const isDark = colorScheme === 'dark';
   const iconProps = isDark

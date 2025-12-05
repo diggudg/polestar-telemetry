@@ -19,16 +19,14 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
   const mapRef = useRef(null);
   const mapServiceRef = useRef(null);
 
-  // const [selectedTrip, setSelectedTrip] = useState(null); // Removed internal state
   const [linkTripsByDay, setLinkTripsByDay] = useState(false);
   const [tripsToShow, setTripsToShow] = useState('100');
   const [selectedTileLayer, setSelectedTileLayer] = useState('osm');
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showMarkers, setShowMarkers] = useState(true);
   const [useRealRoutes] = useState(true);
-  const [routeCache, setRouteCache] = useState({}); // Cache for route geometries
+  const [routeCache, setRouteCache] = useState({});
 
-  // Initialize services (Dependency Injection)
   const colorCalculator = useMemo(() => new ColorCalculator(), []);
   const tileLayerFactory = useMemo(() => new TileLayerFactory(), []);
   const featureBuilder = useMemo(() => new FeatureBuilder(colorCalculator), [colorCalculator]);
@@ -42,7 +40,7 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
     );
 
     if (validTrips.length === 0) {
-      return { center: [-75.6972, 45.4215], allTrips: [], tripsByDay: {} }; // Ottawa default (lon, lat)
+      return { center: [-75.6972, 45.4215], allTrips: [], tripsByDay: {} };
     }
 
     const avgLat = validTrips.reduce((sum, trip) => sum + trip.startLat, 0) / validTrips.length;
@@ -85,7 +83,6 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
     { value: 'ALL', label: `All trips (${allTrips.length})` },
   ];
 
-  // Calculate selected trip index based on ID
   const selectedTripIndex = useMemo(() => {
     if (!selectedTripId) return null;
     return allTrips.findIndex(
@@ -101,12 +98,10 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
         ? allTrips
         : allTrips.slice(0, parseInt(tripsToShow, 10));
 
-  // Initialize map service
   useEffect(() => {
     if (!mapRef.current || mapServiceRef.current) return;
 
     const mapService = new MapService(tileLayerFactory, featureBuilder, markerFactory);
-    // Initialize with a default center, will be updated when data loads
     mapService.initializeMap(mapRef.current, [0, 0], selectedTileLayer);
     mapServiceRef.current = mapService;
 
@@ -118,21 +113,18 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
     };
   }, [featureBuilder, markerFactory, selectedTileLayer, tileLayerFactory]);
 
-  // Handle tile layer changes
   useEffect(() => {
     if (!mapServiceRef.current) return;
     mapServiceRef.current.changeTileLayer(selectedTileLayer);
   }, [selectedTileLayer]);
 
-  // Handle heatmap visibility
   useEffect(() => {
     if (!mapServiceRef.current) return;
     mapServiceRef.current.setHeatmapVisibility(showHeatmap);
   }, [showHeatmap]);
 
-  // Fetch routes from OSRM
   useEffect(() => {
-    if (!useRealRoutes || displayTrips.length > 5) return; // Only fetch for small number of trips to avoid rate limits
+    if (!useRealRoutes || displayTrips.length > 5) return;
 
     const fetchRoutes = async () => {
       const newCache = { ...routeCache };
@@ -143,7 +135,6 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
         if (newCache[tripId]) continue;
 
         try {
-          // OSRM Public API
           const url = `https://router.project-osrm.org/route/v1/driving/${trip.startLng},${trip.startLat};${trip.endLng},${trip.endLat}?overview=full&geometries=geojson`;
           const response = await fetch(url);
           const data = await response.json();
@@ -156,7 +147,6 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
           console.warn('Failed to fetch route for trip:', tripId, error);
         }
 
-        // Be nice to the public API
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
 
@@ -168,37 +158,31 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
     fetchRoutes();
   }, [displayTrips, useRealRoutes, routeCache]);
 
-  // Update map view and features when data changes
   useEffect(() => {
     if (!mapServiceRef.current) return;
 
     const features = [];
     const heatmapFeatures = [];
 
-    // Generate trip features using FeatureBuilder and MarkerFactory
     displayTrips.forEach((trip, tripIdx) => {
-      // Route line
       const tripId = `${trip.startDate}-${trip.startLat}-${trip.startLng}`;
       const geometry = useRealRoutes ? routeCache[tripId] : null;
 
       const routeLine = featureBuilder.createRouteLine(trip, tripIdx, geometry);
       features.push(routeLine);
 
-      // Add markers if enabled
       if (showMarkers) {
         const startMarker = markerFactory.createMarker(trip, 'start', tripIdx);
         const endMarker = markerFactory.createMarker(trip, 'end', tripIdx);
         features.push(startMarker, endMarker);
       }
 
-      // Heatmap points
       heatmapFeatures.push(
         featureBuilder.createHeatmapPoint(trip.startLng, trip.startLat),
         featureBuilder.createHeatmapPoint(trip.endLng, trip.endLat)
       );
     });
 
-    // Add day connection lines if enabled
     if (linkTripsByDay) {
       Object.entries(tripsByDay).forEach(([_day, trips], dayIdx) => {
         trips.forEach((trip, idx) => {
@@ -211,7 +195,6 @@ function MapView({ data, selectedTripId, onTripSelect: _onTripSelect }: MapViewP
       });
     }
 
-    // Update map view and features
     mapServiceRef.current.updateFeatures(features, heatmapFeatures);
     mapServiceRef.current.fitToFeatures(features);
   }, [

@@ -40,7 +40,6 @@ export default function LocationDisplay({ location }: LocationDisplayProps) {
     : { variant: 'outline', color: 'dark', style: { borderColor: 'var(--mantine-color-dark-9)' } };
   const timestamp = location.metaReceivedAt;
 
-  // Convert heading to compass direction
   const getCompassDirection = (degrees: number) => {
     if (degrees === null || degrees === undefined) return 'N/A';
     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];

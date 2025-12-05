@@ -37,7 +37,6 @@ export default function OdometerDisplay({ odometer, battery }: OdometerDisplayPr
   const avgSpeedAuto = odometer.averageSpeedKmPerHourAutomatic || 0;
   const avgSpeedSinceCharge = odometer.averageSpeedKmPerHourSinceCharge || 0;
 
-  // Check for milestones
   const getMilestone = (km: number) => {
     if (km >= 100000) return '100k+';
     if (km >= 50000) return '50k+';

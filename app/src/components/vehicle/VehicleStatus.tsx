@@ -49,7 +49,6 @@ export default function VehicleStatus({
   activeTab = 'overview',
   onUpload,
 }: VehicleStatusProps) {
-  // Extract latest data points
   const battery = telematics?.battery?.[0] || {};
   const health = telematics?.health?.[0] || {};
   const exterior = telematics?.exterior?.[0] || {};
@@ -64,7 +63,6 @@ export default function VehicleStatus({
   const isConnected = battery.chargerConnectionStatus === 'CHARGER_CONNECTION_STATUS_CONNECTED';
 
   const serviceDistance = health.distanceToServiceKm || 0;
-  // Assuming 30,000 km service interval for calculation
   const serviceProgress = Math.min(100, Math.max(0, ((30000 - serviceDistance) / 30000) * 100));
 
   const isLocked = exterior.centralLock === 'LOCK_STATUS_LOCKED';
@@ -78,7 +76,6 @@ export default function VehicleStatus({
     ? { variant: 'filled', color: 'dark' }
     : { variant: 'outline', color: 'dark', style: { borderColor: 'var(--mantine-color-dark-9)' } };
 
-  // Render content based on active tab
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':

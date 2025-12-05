@@ -20,7 +20,6 @@ export default function AirQualityDisplay({ preCleaning }: AirQualityDisplayProp
   const aqi = preCleaning.measuredAirQualityIndex || 0;
   const pm25 = preCleaning.measuredParticulateMatter25 || 0;
 
-  // AQI Rating (simplified scale)
   const getAQIRating = (value: number) => {
     if (value <= 50)
       return { label: 'Good', color: 'orange', description: 'Air quality is satisfactory' };

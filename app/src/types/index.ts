@@ -1,4 +1,3 @@
-// Trip data types
 export interface Trip {
   id: number;
   startDate: string;
@@ -22,7 +21,6 @@ export interface Trip {
   socDrop: number;
 }
 
-// Statistics types
 export interface Statistics {
   totalTrips: number;
   totalDistance: string;
@@ -38,7 +36,6 @@ export interface Statistics {
   gasSaved: string;
 }
 
-// Charging session types
 export interface ChargingSession {
   date: string;
   location: string;
@@ -66,7 +63,6 @@ export interface ChargingStats {
   topLocations: ChargingLocation[];
 }
 
-// Route analysis types
 export interface Route {
   id: string;
   startAddress: string;
@@ -87,7 +83,6 @@ export interface RouteStats {
   inefficientRoutes: Route[];
 }
 
-// Filter types
 export interface DateRange {
   start: Date | null;
   end: Date | null;

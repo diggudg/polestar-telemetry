@@ -46,10 +46,9 @@ export default function ChargingStats({ battery, chronos }: ChargingStatsProps) 
     ? { variant: 'filled', color: 'dark' }
     : { variant: 'outline', color: 'dark', style: { borderColor: 'var(--mantine-color-dark-9)' } };
 
-  // Calculate estimated time to target
   const socDiff = targetSOC - currentSOC;
-  const batteryCapacity = 79; // kWh for Polestar 2
-  const chargingSpeed = (ampLimit * 230) / 1000; // kW (assuming 230V)
+  const batteryCapacity = 79;
+  const chargingSpeed = (ampLimit * 230) / 1000;
   const estimatedHoursToTarget =
     socDiff > 0 ? ((socDiff / 100) * batteryCapacity) / chargingSpeed : 0;
   const estimatedMinutesToTarget = Math.round(estimatedHoursToTarget * 60);

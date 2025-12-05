@@ -15,14 +15,12 @@ export default function JourneyExplorer({ data }: JourneyExplorerProps) {
   const [filteredData, setFilteredData] = useState<Trip[]>(data);
   const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
 
-  // Sync state with props when data changes
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
 
   const handleFilterChange = (filtered: Trip[]) => {
     setFilteredData(filtered);
-    // If the currently selected trip is filtered out, deselect it
     if (selectedTripId) {
       const exists = filtered.find(
         (t) => `${t.startDate}-${t.startOdometer}-${t.endOdometer}` === selectedTripId
