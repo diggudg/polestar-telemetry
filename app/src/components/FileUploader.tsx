@@ -8,17 +8,21 @@ import {
   Text,
   Tooltip,
   useMantineColorScheme,
+  SimpleGrid,
+  Button,
+  ThemeIcon,
+  Badge,
 } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
-import { IconFile, IconHelp, IconUpload, IconX } from "@tabler/icons-react";
+import { IconFile, IconHelp, IconUpload, IconX, IconCar, IconBolt, IconCheck } from "@tabler/icons-react";
 import { useState } from "react";
 import { DataValidator } from "../utils/DataValidator";
 import { parseCSV, parseXLSX } from "../utils/dataParser";
 import AnomalyCorrectionModal from "./AnomalyCorrectionModal";
 import HelpModal from "./HelpModal";
 
-function FileUploader({ onDataLoaded }) {
+function FileUploader({ onDataLoaded, vehicleStatusData, chargingData }) {
   const [loading, setLoading] = useState(false);
   const [helpOpened, setHelpOpened] = useState(false);
   const [anomalies, setAnomalies] = useState([]);
@@ -26,49 +30,42 @@ function FileUploader({ onDataLoaded }) {
   const [pendingData, setPendingData] = useState(null);
   const { colorScheme } = useMantineColorScheme();
 
-  const handleFileDrop = async (files) => {
+  const handleJourneyDrop = async (files) => {
     if (files.length === 0) return;
-
     const file = files[0];
     const fileName = file.name.toLowerCase();
-
     setLoading(true);
 
     try {
       let data;
-
       if (fileName.endsWith(".csv")) {
         data = await parseCSV(file);
       } else if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
         data = await parseXLSX(file);
       } else {
-        throw new Error(
-          "Unsupported file format. Please upload a CSV or XLSX file."
-        );
+        throw new Error("Unsupported file format. Please upload a CSV or XLSX file.");
       }
 
       if (data.length === 0) {
         throw new Error("No valid journey data found in the file.");
       }
 
-      // Validate data
       const foundAnomalies = DataValidator.validate(data);
-
       if (foundAnomalies.length > 0) {
         setAnomalies(foundAnomalies);
         setPendingData(data);
         setModalOpened(true);
-        setLoading(false); // Stop loading, waiting for user input
+        setLoading(false);
         return;
       }
 
       notifications.show({
         title: "Success!",
         message: `Loaded ${data.length} journeys from ${file.name}`,
-        color: "green",
+        color: "polestarOrange",
       });
 
-      onDataLoaded(data);
+      onDataLoaded('journey', data);
     } catch (error) {
       notifications.show({
         title: "Error",
@@ -80,16 +77,43 @@ function FileUploader({ onDataLoaded }) {
     }
   };
 
+  const handleJsonDrop = async (files, type) => {
+    if (files.length === 0) return;
+    const file = files[0];
+    setLoading(true);
+
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      
+      onDataLoaded(type, data);
+      
+      notifications.show({
+        title: "Success!",
+        message: `Loaded ${type === 'vehicle' ? 'Vehicle Status' : 'Charging Settings'}`,
+        color: "polestarOrange",
+      });
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Failed to parse JSON file",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Stack gap="xl" mt="xl">
-      <div style={{ textAlign: "center" }}>
+      <div>
         <Image
           src={
             colorScheme === "dark"
-              ? "/polestar-journey-log-explorer/logo-white.png"
-              : "/polestar-journey-log-explorer/logo-black.png"
+              ? "/polestar-telemetry-logo.png"
+              : "/polestar-telemetry-logo.png"
           }
-          alt="Polestar OSS Logo"
+          alt="Polestar Telemetry Logo"
           h={120}
           fit="contain"
           style={{ margin: "0 auto" }}
@@ -97,9 +121,9 @@ function FileUploader({ onDataLoaded }) {
         />
         <Group justify="center" gap="xs" mb="sm">
           <Text size="xl" fw={700}>
-            Upload Your Journey Log
+            Upload Your Data
           </Text>
-          <Tooltip label="How to get your journey data">
+          <Tooltip label="How to get your data">
             <ActionIcon
               variant="subtle"
               size="lg"
@@ -110,58 +134,83 @@ function FileUploader({ onDataLoaded }) {
           </Tooltip>
         </Group>
         <Text size="sm" c="dimmed" mb="xl">
-          Upload a CSV or XLSX file containing your Polestar journey data to get
-          started
+          Upload your Polestar journey log and other data files to get started
         </Text>
       </div>
 
       <Paper shadow="md" p="xl" radius="md" withBorder>
-        <Dropzone
-          onDrop={handleFileDrop}
-          loading={loading}
-          accept={[
-            "text/csv",
-            "application/vnd.ms-excel",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          ]}
-          maxFiles={1}
-        >
-          <Group
-            justify="center"
-            gap="xl"
-            style={{ minHeight: 200, pointerEvents: "none" }}
-          >
-            <Dropzone.Accept>
-              <IconUpload size={50} stroke={1.5} />
-            </Dropzone.Accept>
-            <Dropzone.Reject>
-              <IconX size={50} stroke={1.5} />
-            </Dropzone.Reject>
-            <Dropzone.Idle>
-              <IconFile size={50} stroke={1.5} />
-            </Dropzone.Idle>
+        <Stack gap="lg">
+          {/* Main Journey Log Upload */}
+          <div>
+            <Text fw={600} mb="sm">Journey Log (Required)</Text>
+            <Dropzone
+              onDrop={handleJourneyDrop}
+              loading={loading}
+              accept={[
+                "text/csv",
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              ]}
+              maxFiles={1}
+            >
+              <Group justify="center" gap="xl" style={{ minHeight: 120, pointerEvents: "none" }}>
+                <Dropzone.Accept><IconUpload size={50} stroke={1.5} /></Dropzone.Accept>
+                <Dropzone.Reject><IconX size={50} stroke={1.5} /></Dropzone.Reject>
+                <Dropzone.Idle><IconFile size={50} stroke={1.5} /></Dropzone.Idle>
+                <div>
+                  <Text size="xl" inline>Drag Journey Log here</Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>Accepts CSV and XLSX files</Text>
+                </div>
+              </Group>
+            </Dropzone>
+          </div>
 
+          <SimpleGrid cols={{ base: 1, sm: 2 }}>
+            {/* Vehicle Status Upload */}
             <div>
-              <Text size="xl" inline>
-                Drag file here or click to select
-              </Text>
-              <Text size="sm" c="dimmed" inline mt={7}>
-                Accepts CSV and XLSX files
-              </Text>
+              <Group justify="space-between" mb="xs">
+                <Text fw={600}>Vehicle Status (vts.json)</Text>
+                {vehicleStatusData && <Badge color="polestarOrange" leftSection={<IconCheck size={12}/>}>Uploaded</Badge>}
+              </Group>
+              <Dropzone
+                onDrop={(files) => handleJsonDrop(files, 'vehicle')}
+                loading={loading}
+                accept={["application/json"]}
+                maxFiles={1}
+                style={{ borderColor: vehicleStatusData ? 'var(--mantine-color-polestarOrange-5)' : undefined }}
+              >
+                <Group justify="center" gap="md" style={{ minHeight: 80, pointerEvents: "none" }}>
+                  <IconCar size={30} stroke={1.5} />
+                  <div>
+                    <Text size="sm" inline>Upload vts.json</Text>
+                  </div>
+                </Group>
+              </Dropzone>
             </div>
-          </Group>
-        </Dropzone>
-      </Paper>
 
-      <Paper p="md" radius="md" withBorder>
-        <Text size="sm" fw={600} mb="xs">
-          Expected file format:
-        </Text>
-        <Text size="xs" c="dimmed">
-          Your file should contain columns like: Start Date, End Date, Distance
-          in KM, Consumption in Kwh, Start Address, End Address, Start/End
-          Latitude/Longitude, etc.
-        </Text>
+            {/* Charging Settings Upload */}
+            <div>
+              <Group justify="space-between" mb="xs">
+                <Text fw={600}>Charging Settings (chronos.json)</Text>
+                {chargingData && <Badge color="polestarOrange" leftSection={<IconCheck size={12}/>}>Uploaded</Badge>}
+              </Group>
+              <Dropzone
+                onDrop={(files) => handleJsonDrop(files, 'charging')}
+                loading={loading}
+                accept={["application/json"]}
+                maxFiles={1}
+                style={{ borderColor: chargingData ? 'var(--mantine-color-polestarOrange-5)' : undefined }}
+              >
+                <Group justify="center" gap="md" style={{ minHeight: 80, pointerEvents: "none" }}>
+                  <IconBolt size={30} stroke={1.5} />
+                  <div>
+                    <Text size="sm" inline>Upload chronos.json</Text>
+                  </div>
+                </Group>
+              </Dropzone>
+            </div>
+          </SimpleGrid>
+        </Stack>
       </Paper>
 
       <HelpModal opened={helpOpened} onClose={() => setHelpOpened(false)} />
@@ -176,42 +225,22 @@ function FileUploader({ onDataLoaded }) {
         }}
         onApply={(corrections) => {
           if (!pendingData) return;
-
-          let finalData = [...pendingData];
-
-          // Apply corrections
-          // We need to process in reverse order if we are deleting to not mess up indices?
-          // Actually, map/filter is safer.
-
-          // Create a map of corrections for O(1) lookup
           const correctionMap = new Map(corrections.map(c => [c.tripIndex, c]));
-
-          finalData = finalData.map((trip, index) => {
+          const finalData = pendingData.map((trip, index) => {
             const correction = correctionMap.get(index);
             if (!correction) return trip;
-
             if (correction.action === 'skip') return null;
             if (correction.action === 'correct' && correction.newData) {
-              return {
-                ...trip,
-                ...correction.newData,
-                // Recalculate derived fields if needed
-                efficiency: ((correction.newData.consumptionKwh / correction.newData.distanceKm) * 100).toFixed(2)
-              };
+              return { ...trip, ...correction.newData, efficiency: ((correction.newData.consumptionKwh / correction.newData.distanceKm) * 100).toFixed(2) };
             }
-            return trip; // 'keep' action
+            return trip;
           }).filter(trip => trip !== null);
 
-          onDataLoaded(finalData);
+          onDataLoaded('journey', finalData);
           setModalOpened(false);
           setPendingData(null);
           setAnomalies([]);
-
-          notifications.show({
-            title: "Success!",
-            message: `Loaded ${finalData.length} journeys with corrections applied`,
-            color: "green",
-          });
+          notifications.show({ title: "Success!", message: `Loaded ${finalData.length} journeys`, color: "polestarOrange" });
         }}
       />
     </Stack>

@@ -91,7 +91,7 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
           `addressdetails=1&limit=5`,
           {
             headers: {
-              'User-Agent': 'Polestar Journey Log Explorer'
+              'User-Agent': 'Polestar Telemetry'
             }
           }
         );
@@ -324,7 +324,7 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
               <Slider
                 value={homeChargingPercent}
                 onChange={setHomeChargingPercent}
-                color="blue"
+                color="orange"
                 size="lg"
                 thumbSize={20}
                 label={null}
@@ -339,7 +339,7 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
         <SimpleGrid cols={2} spacing="md">
           <Paper p="md" radius="md" withBorder>
             <Stack align="center" gap="xs">
-              <ThemeIcon size={40} radius="xl" variant="light" color="blue">
+              <ThemeIcon size={40} radius="xl" variant="light" color="polestarOrange">
                 <IconHome size={20} />
               </ThemeIcon>
               <Text size="xs" c="dimmed" tt="uppercase" fw={700}>Home Cost</Text>
@@ -357,18 +357,18 @@ function CostCalculatorModal({ opened, onClose, statistics }: CostCalculatorModa
           </Paper>
         </SimpleGrid>
 
-        <Paper p="lg" radius="md" bg={colorScheme === 'dark' ? 'var(--mantine-color-blue-9)' : 'var(--mantine-color-blue-light)'} withBorder style={{ borderColor: 'var(--mantine-color-blue-3)' }}>
+        <Paper p="lg" radius="md" bg={colorScheme === 'dark' ? 'var(--mantine-color-orange-9)' : 'var(--mantine-color-orange-light)'} withBorder style={{ borderColor: 'var(--mantine-color-orange-3)' }}>
           <Group justify="space-between" align="center">
             <Group gap="md">
-              <ThemeIcon size={48} radius="md" variant="filled" color="blue">
+              <ThemeIcon size={48} radius="md" variant="filled" color="orange">
                 <IconCurrencyDollar size={28} />
               </ThemeIcon>
               <div>
-                <Text size="sm" c={colorScheme === 'dark' ? 'blue.1' : 'blue.9'} fw={600} tt="uppercase">Total Estimated Cost</Text>
-                <Text size="xs" c={colorScheme === 'dark' ? 'blue.2' : 'blue.7'}>Based on {statistics?.totalDistance} km</Text>
+                <Text size="sm" c={colorScheme === 'dark' ? 'orange.1' : 'orange.9'} fw={600} tt="uppercase">Total Estimated Cost</Text>
+                <Text size="xs" c={colorScheme === 'dark' ? 'orange.2' : 'orange.7'}>Based on {statistics?.totalDistance} km</Text>
               </div>
             </Group>
-            <Text size="3rem" fw={800} c={colorScheme === 'dark' ? 'blue.0' : 'blue.9'} lh={1}>
+            <Text size="3rem" fw={800} c={colorScheme === 'dark' ? 'orange.0' : 'orange.9'} lh={1}>
               {symbol}{costs.totalCost}
             </Text>
           </Group>

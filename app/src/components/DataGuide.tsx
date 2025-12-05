@@ -25,7 +25,7 @@ function DataGuide() {
         </Group>
         <Text c="dimmed">
           This guide will help you interpret the various charts, maps, statistics, and calculations 
-          presented in the Journey Log Explorer.
+          presented in the Telemetry.
         </Text>
       </Paper>
 
@@ -85,7 +85,7 @@ function DataGuide() {
                 <div>
                   <Text size="xs" c="dimmed" mt="xs" fw={600}>What's considered efficient?</Text>
                   <List size="xs" mt={4}>
-                    <List.Item><Badge color="green" size="xs">Excellent</Badge> Below 17 kWh/100km</List.Item>
+                    <List.Item><Badge color="polestarOrange" size="xs">Excellent</Badge> Below 17 kWh/100km</List.Item>
                     <List.Item><Badge color="blue" size="xs">Good</Badge> 17-20 kWh/100km</List.Item>
                     <List.Item><Badge color="yellow" size="xs">Average</Badge> 20-23 kWh/100km</List.Item>
                     <List.Item><Badge color="red" size="xs">High</Badge> Above 23 kWh/100km</List.Item>
@@ -101,7 +101,7 @@ function DataGuide() {
                   The estimated carbon dioxide emissions you avoided by driving an electric vehicle 
                   instead of a comparable internal combustion engine (ICE) vehicle.
                 </Text>
-                <BorderedPaper p="sm" withBorder bg="gray.0" borderColor="green-6">
+                <BorderedPaper p="sm" withBorder bg="gray.0" borderColor="polestarOrange-5">
                   <Text size="xs" fw={600} mb={4}>How it's calculated:</Text>
                   <Code block size="xs">
                     CO₂ Saved = Total Distance (km) × ICE Emissions per km
@@ -117,9 +117,9 @@ function DataGuide() {
                   <List size="xs" mt={4}>
                     <List.Item>
                       Based on average ICE vehicle emissions of 120g CO₂/km (typical for mid-size sedans)
-                    </List.Item>
                     <List.Item>
-                      Does not account for electricity generation emissions (assumes renewable energy or average grid mix)
+                      <Badge color="polestarOrange" size="sm">Excellent</Badge> Below 17 kWh/100km - Ideal conditions, 
+                    </List.Item>
                     </List.Item>
                     <List.Item>
                       Your actual environmental impact may vary based on your electricity source
@@ -179,7 +179,7 @@ function DataGuide() {
                     days with longer trips.
                   </List.Item>
                   <List.Item>
-                    <strong>Green line (Consumption):</strong> Shows kWh consumed each day. Should generally 
+                    <strong>Safety Orange line (Consumption):</strong> Shows kWh consumed each day. Should generally 
                     correlate with distance.
                   </List.Item>
                   <List.Item>
@@ -198,15 +198,15 @@ function DataGuide() {
                 </Text>
                 <List size="sm">
                   <List.Item>
-                    <Badge color="green" size="sm">Excellent</Badge> Below 17 kWh/100km - Ideal conditions, 
+                    <Badge color="polestarOrange" size="sm">Excellent</Badge> Below 17 kWh/100km - Ideal conditions, 
                     gentle driving, optimal temperature
                   </List.Item>
                   <List.Item>
                     <Badge color="blue" size="sm">Good</Badge> 17-20 kWh/100km - Normal efficient driving
-                  </List.Item>
                   <List.Item>
-                    <Badge color="yellow" size="sm">Average</Badge> 20-23 kWh/100km - Mixed conditions or 
-                    moderate highway speeds
+                    <Badge color="polestarOrange" size="sm">Excellent</Badge> Below 17 kWh/100km - Ideal conditions, 
+                    gentle driving, optimal temperature
+                  </List.Item>
                   </List.Item>
                   <List.Item>
                     <Badge color="red" size="sm">High</Badge> Above 23 kWh/100km - High speeds, cold weather, 
@@ -302,7 +302,7 @@ function DataGuide() {
                 <Text fw={600} mb="xs">📍 Marker Types</Text>
                 <List size="sm">
                   <List.Item>
-                    <Badge color="green" size="sm">Start Points</Badge> Green markers show where journeys began
+                    <Badge color="polestarOrange" size="sm">Start Points</Badge> Orange markers show where journeys began
                   </List.Item>
                   <List.Item>
                     <Badge color="red" size="sm">End Points</Badge> Red markers show where journeys ended
@@ -322,7 +322,7 @@ function DataGuide() {
                 </Text>
                 <List size="sm">
                   <List.Item>
-                    <span style={{ color: '#22c55e', fontWeight: 600 }}>■</span> <strong>Green</strong> 
+                    <span style={{ color: '#FF7500', fontWeight: 600 }}>■</span> <strong>Safety Orange</strong> 
                     {' - Excellent efficiency (<17 kWh/100km)'}
                   </List.Item>
                   <List.Item>

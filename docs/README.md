@@ -1,13 +1,13 @@
 # Documentation Index
 
-![Polestar Journey Log Explorer](../assets/black_transparent.png)
+![Polestar Telemetry](../assets/black_transparent.png)
 
-**Polestar Journey Log Explorer Documentation**  
+**Polestar Telemetry Documentation**  
 **Author / Maintainer**: Digvijay Singh <diggudg@gmail.com>  
-Original content by Kinn Coelho Juliao <kinncj@gmail.com> — many thanks to the original author.
+
 **License**: MIT
 
-Welcome to the comprehensive documentation for the Polestar Journey Log Explorer! This directory contains guides for users, developers, and contributors.
+Welcome to the comprehensive documentation for the Polestar Telemetry! This directory contains guides for users, developers, and contributors.
 
 ---
 
@@ -124,7 +124,7 @@ Interactive Mermaid diagrams visualizing system components:
 
 ### I'm a New User
 
-1. Visit the [live demo](https://kinncj.github.io/polestar-journey-log-explorer/)
+1. Visit the [live demo](https://diggudg.github.io/polestar-telemetry/)
 2. Read the [Quick Start Guide](./QUICKSTART.md)
 3. Upload your journey log and explore!
 
@@ -138,7 +138,7 @@ Interactive Mermaid diagrams visualizing system components:
 ### I Want to Contribute
 
 1. Read the [Contributing Guide](./CONTRIBUTING.md)
-2. Browse [open issues](https://github.com/diggudg/polestar-journey-log-explorer/issues)
+2. Browse [open issues](https://github.com/diggudg/polestar-telemetry/issues)
 3. Fork, develop, and submit a pull request!
 
 ---
@@ -223,19 +223,19 @@ All documentation follows these principles:
 
 ### Get Help
 
--- **Issues**: [Report bugs or request features](https://github.com/diggudg/polestar-journey-log-explorer/issues)
--- **Discussions**: [Ask questions and share ideas](https://github.com/diggudg/polestar-journey-log-explorer/discussions)
+-- **Issues**: [Report bugs or request features](https://github.com/diggudg/polestar-telemetry/issues)
+-- **Discussions**: [Ask questions and share ideas](https://github.com/diggudg/polestar-telemetry/discussions)
 
 ### Stay Updated
 
-- **Repository**: [github.com/diggudg/polestar-journey-log-explorer](https://github.com/diggudg/polestar-journey-log-explorer)
-- **Live Demo**: [kinncj.github.io/polestar-journey-log-explorer](https://kinncj.github.io/polestar-journey-log-explorer/)
+- **Repository**: [github.com/diggudg/polestar-journey-log-explorer](https://github.com/diggudg/polestar-telemetry)
+- **Live Demo**: [kinncj.github.io/polestar-journey-log-explorer](https://diggudg.github.io/polestar-telemetry/)
 
 ---
 
 ## ⚠️ Disclaimer
 
-**This is a community-driven project and is not affiliated with, endorsed by, or in any way officially connected with Polestar, the Polestar brand, Geely, or any of their subsidiaries or affiliates.**
+**This is a project and is not affiliated with, endorsed by, or in any way officially connected with Polestar, the Polestar brand, Geely, or any of their subsidiaries or affiliates.**
 
 This tool is created by the community for analyzing journey log data exported from Polestar vehicles. All trademarks, logos, and brand names are the property of their respective owners.
 
@@ -246,8 +246,6 @@ This tool is created by the community for analyzing journey log data exported fr
 This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 **Copyright (c) 2025 Digvijay Singh <diggudg@gmail.com>**
-
-Original project by Kinn Coelho Juliao <kinncj@gmail.com> — credit to the original author for the foundation of this project.
 
 ---
 
@@ -307,7 +305,7 @@ For questions or suggestions about the documentation:
 
 ## 📄 License
 
-This documentation is part of the Polestar Journey Log Explorer project and is licensed under the MIT License.
+This documentation is part of the Polestar Telemetry project and is licensed under the MIT License.
 
 ---
 

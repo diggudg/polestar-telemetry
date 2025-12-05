@@ -1,5 +1,5 @@
-import { ActionIcon, Badge, Group, Pagination, Paper, ScrollArea, Select, Stack, Table, Text, TextInput, Tooltip } from '@mantine/core';
-import { IconNote, IconSearch, IconTag } from '@tabler/icons-react';
+import { ActionIcon, Badge, Group, Pagination, Paper, ScrollArea, Select, Stack, Table, Text, TextInput, Tooltip, UnstyledButton, Center, rem } from '@mantine/core';
+import { IconNote, IconSearch, IconTag, IconSelector, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { TableDataProcessor, TableRowFormatter } from '../../services/table/TableDataProcessor';
 import { generateTripId, getTripAnnotation } from '../../utils/tripAnnotations';
@@ -8,15 +8,17 @@ import type { Trip } from '../../types';
 
 interface TableViewProps {
   data: Trip[];
+  selectedTripId?: string | null;
+  onTripSelect?: (tripId: string | null) => void;
 }
 
-function TableView({ data }: TableViewProps) {
+function TableView({ data, selectedTripId, onTripSelect }: TableViewProps) {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('startDate');
   const [sortOrder, setSortOrder] = useState('desc');
   const [modalOpened, setModalOpened] = useState(false);
-  const [selectedTrip, setSelectedTrip] = useState(null);
-  const [selectedTripId, setSelectedTripId] = useState(null);
+  const [selectedTripForModal, setSelectedTripForModal] = useState(null);
+  const [selectedTripIdForModal, setSelectedTripIdForModal] = useState(null);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
@@ -48,14 +50,46 @@ function TableView({ data }: TableViewProps) {
 
   const totalPages = Math.ceil(filteredAndSortedData.length / parseInt(itemsPerPage));
 
-  const handleOpenModal = (trip) => {
-    setSelectedTrip(trip);
-    setSelectedTripId(generateTripId(trip));
+  const handleOpenModal = (trip, e) => {
+    e.stopPropagation(); // Prevent row selection when clicking edit button
+    setSelectedTripForModal(trip);
+    setSelectedTripIdForModal(generateTripId(trip));
     setModalOpened(true);
   };
 
   const handleSaveAnnotation = () => {
     // Refresh handled by modal close
+  };
+
+  interface ThProps {
+    children: React.ReactNode;
+    reversed: boolean;
+    sorted: boolean;
+    onSort(): void;
+  }
+
+  function Th({ children, reversed, sorted, onSort }: ThProps) {
+    const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+    return (
+      <Table.Th>
+        <UnstyledButton onClick={onSort} style={{ width: '100%' }}>
+          <Group justify="space-between">
+            <Text fw={700} size="sm">
+              {children}
+            </Text>
+            <Center>
+              <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </Center>
+          </Group>
+        </UnstyledButton>
+      </Table.Th>
+    );
+  }
+
+  const setSorting = (field: string) => {
+    const reversed = field === sortBy ? sortOrder === 'asc' : false;
+    setSortBy(field);
+    setSortOrder(reversed ? 'desc' : 'asc');
   };
 
 
@@ -70,20 +104,26 @@ function TableView({ data }: TableViewProps) {
     const efficiency = rowFormatter.formatEfficiency(trip.efficiency);
     const socRange = rowFormatter.formatSOCRange(trip.socSource, trip.socDestination);
 
+    const isSelected = selectedTripId === tripId;
+
     return (
-      <Table.Tr key={trip.id}>
+      <Table.Tr 
+        key={trip.id} 
+        onClick={() => onTripSelect && onTripSelect(isSelected ? null : tripId)}
+        style={{ cursor: 'pointer', backgroundColor: isSelected ? 'rgba(25, 113, 194, 0.1)' : undefined }}
+      >
         <Table.Td>{trip.startDate}</Table.Td>
         <Table.Td>{rowFormatter.truncateAddress(trip.startAddress, 40)}</Table.Td>
         <Table.Td>{rowFormatter.truncateAddress(trip.endAddress, 40)}</Table.Td>
         <Table.Td>{trip.distanceKm}</Table.Td>
         <Table.Td>{trip.consumptionKwh}</Table.Td>
         <Table.Td>
-          <Badge color={efficiency.color} size="sm">
+          <Badge color={efficiency.color} size="sm" variant="outline">
             {efficiency.value}
           </Badge>
         </Table.Td>
         <Table.Td>
-          <Badge color={socRange.color} size="sm">
+          <Badge color={socRange.color} size="sm" variant="outline">
             {socRange.label}
           </Badge>
         </Table.Td>
@@ -92,14 +132,14 @@ function TableView({ data }: TableViewProps) {
           <Group gap="xs">
             {hasTags && (
               <Tooltip label={annotation.tags.join(', ')} withArrow>
-                <Badge size="sm" variant="dot" color="blue">
+                <Badge size="sm" variant="dot" color="orange">
                   <IconTag size={12} /> {annotation.tags.length}
                 </Badge>
               </Tooltip>
             )}
             {hasNotes && (
               <Tooltip label={annotation.notes.substring(0, 100)} withArrow>
-                <Badge size="sm" variant="dot" color="green">
+                <Badge size="sm" variant="dot" color="polestarOrange">
                   <IconNote size={12} />
                 </Badge>
               </Tooltip>
@@ -110,8 +150,8 @@ function TableView({ data }: TableViewProps) {
           <Tooltip label="Add notes/tags" withArrow>
             <ActionIcon
               variant={hasNotes || hasTags ? 'filled' : 'subtle'}
-              color={hasNotes || hasTags ? 'blue' : 'gray'}
-              onClick={() => handleOpenModal(trip)}
+              color={hasNotes || hasTags ? 'orange' : 'polestarGrey'}
+              onClick={(e) => handleOpenModal(trip, e)}
               size="sm"
             >
               <IconNote size={16} />
@@ -180,14 +220,44 @@ function TableView({ data }: TableViewProps) {
         <Table striped highlightOnHover style={{ minWidth: '800px' }}>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Date</Table.Th>
+              <Th
+                sorted={sortBy === 'startDate'}
+                reversed={sortOrder === 'desc'}
+                onSort={() => setSorting('startDate')}
+              >
+                Date
+              </Th>
               <Table.Th>Start Address</Table.Th>
               <Table.Th>End Address</Table.Th>
-              <Table.Th>Distance (km)</Table.Th>
-              <Table.Th>Consumption (kWh)</Table.Th>
-              <Table.Th>Efficiency (kWh/100km)</Table.Th>
+              <Th
+                sorted={sortBy === 'distanceKm'}
+                reversed={sortOrder === 'desc'}
+                onSort={() => setSorting('distanceKm')}
+              >
+                Distance (km)
+              </Th>
+              <Th
+                sorted={sortBy === 'consumptionKwh'}
+                reversed={sortOrder === 'desc'}
+                onSort={() => setSorting('consumptionKwh')}
+              >
+                Consumption
+              </Th>
+              <Th
+                sorted={sortBy === 'efficiency'}
+                reversed={sortOrder === 'desc'}
+                onSort={() => setSorting('efficiency')}
+              >
+                Efficiency
+              </Th>
               <Table.Th>SOC Change</Table.Th>
-              <Table.Th>SOC Drop (%)</Table.Th>
+              <Th
+                sorted={sortBy === 'socDrop'}
+                reversed={sortOrder === 'desc'}
+                onSort={() => setSorting('socDrop')}
+              >
+                SOC Drop (%)
+              </Th>
               <Table.Th>Notes/Tags</Table.Th>
               <Table.Th>Actions</Table.Th>
             </Table.Tr>
@@ -219,8 +289,8 @@ function TableView({ data }: TableViewProps) {
       <TripNotesModal
         opened={modalOpened}
         onClose={() => setModalOpened(false)}
-        trip={selectedTrip}
-        tripId={selectedTripId}
+        trip={selectedTripForModal}
+        tripId={selectedTripIdForModal}
         onSave={handleSaveAnnotation}
       />
     </Paper >

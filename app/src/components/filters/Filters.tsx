@@ -196,14 +196,16 @@ function Filters({ data, onFilterChange }: FiltersProps) {
             {categories.length > 0 && (
               <>
                 <Text size="sm" fw={500} c="dimmed" mt="xs">Category</Text>
-                <Select
-                  label="Trip Category"
-                  placeholder="Select category"
-                  data={categoryOptions}
-                  value={filters.category}
-                  onChange={(value) => handleFilterChange('category', value)}
-                  clearable
-                />
+                  <Select
+                    label="Trip Category"
+                    placeholder="Select category"
+                    data={categoryOptions}
+                    value={filters.category}
+                    onChange={(value) => handleFilterChange('category', value)}
+                    clearable
+                    searchable
+                    checkIconPosition="right"
+                  />
               </>
             )}
 

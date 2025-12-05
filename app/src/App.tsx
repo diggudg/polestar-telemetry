@@ -21,10 +21,20 @@ import Dashboard from "./components/Dashboard";
 
 function App() {
   const [journeyData, setJourneyData] = useState(null);
+  const [vehicleStatusData, setVehicleStatusData] = useState(null);
+  const [chargingData, setChargingData] = useState(null);
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
-  const handleDataLoaded = (data) => {
-    setJourneyData(data);
+  const handleDataLoaded = (type, data) => {
+    if (type === 'journey') setJourneyData(data);
+    if (type === 'vehicle' || type === 'vts') setVehicleStatusData(data);
+    if (type === 'charging' || type === 'chronos') setChargingData(data);
+  };
+
+  const handleReset = () => {
+    setJourneyData(null);
+    setVehicleStatusData(null);
+    setChargingData(null);
   };
 
   return (
@@ -47,16 +57,16 @@ function App() {
             <Image
               src={
                 colorScheme === "dark"
-                  ? "/polestar-journey-log-explorer/logo-white.png"
-                  : "/polestar-journey-log-explorer/logo-black.png"
+                  ? "/polestar-telemetry-logo.png"
+                  : "/polestar-telemetry-logo.png"
               }
-              alt="Polestar OSS Logo"
+              alt="Polestar Telemetry Logo"
               h={35}
               fit="contain"
             />
             <div>
               <Title order={{ base: 4, sm: 2 }} style={{ lineHeight: 1.2 }}>
-                Polestar Journey Log Explorer
+                Polestar Telemetry
               </Title>
               <Text size="sm" c="dimmed" visibleFrom="sm">
                 Analyze your electric vehicle journey data
@@ -88,11 +98,18 @@ function App() {
       <AppShell.Main>
         <Container size="xl">
           {!journeyData ? (
-            <FileUploader onDataLoaded={handleDataLoaded} />
+            <FileUploader 
+              onDataLoaded={handleDataLoaded} 
+              vehicleStatusData={vehicleStatusData}
+              chargingData={chargingData}
+            />
           ) : (
             <Dashboard
               data={journeyData}
-              onReset={() => setJourneyData(null)}
+              vehicleStatusData={vehicleStatusData}
+              chargingData={chargingData}
+              onReset={handleReset}
+              onDataLoaded={handleDataLoaded}
             />
           )}
         </Container>
@@ -110,22 +127,22 @@ function App() {
                   <Image
                     src={
                       colorScheme === "dark"
-                        ? "/polestar-journey-log-explorer/logo-white.png"
-                        : "/polestar-journey-log-explorer/logo-black.png"
+                        ? "/polestar-telemetry-logo.png"
+                        : "/polestar-telemetry-logo.png"
                     }
-                    alt="Polestar OSS Logo"
+                    alt="Polestar Telemetry Logo"
                     h={24}
                     fit="contain"
                   />
                   <div>
                     <Text size="xs" fw={500}>
-                      Polestar Journey Log Explorer
+                      Polestar Telemetry
                     </Text>
                   </div>
                 </Group>
                 <Group gap="sm" justify="center">
                   <Anchor
-                    href="https://github.com/diggudg/polestar-journey-log-explorer"
+                    href="https://github.com/diggudg/polestar-telemetry"
                     target="_blank"
                     c="dimmed"
                     size="xs"
@@ -136,7 +153,7 @@ function App() {
                     </Group>
                   </Anchor>
                   <Anchor
-                    href="https://github.com/diggudg/polestar-journey-log-explorer/blob/main/LICENSE"
+                    href="https://github.com/diggudg/polestar-telemetry/blob/main/LICENSE"
                     target="_blank"
                     c="dimmed"
                     size="xs"
@@ -150,25 +167,25 @@ function App() {
                   <Image
                     src={
                       colorScheme === "dark"
-                        ? "/polestar-journey-log-explorer/logo-white.png"
-                        : "/polestar-journey-log-explorer/logo-black.png"
+                        ? "/polestar-telemetry-logo.png"
+                        : "/polestar-telemetry-logo.png"
                     }
-                    alt="Polestar OSS Logo"
+                    alt="Polestar Telemetry Logo"
                     h={30}
                     fit="contain"
                   />
                   <div>
                     <Text size="sm" fw={500}>
-                      Polestar Journey Log Explorer
+                      Polestar Telemetry
                     </Text>
                     <Text size="xs" c="dimmed">
-                      A community-driven project
+                      Vehicle data analysis and visualization
                     </Text>
                   </div>
                 </Group>
                 <Group gap="md">
                   <Anchor
-                    href="https://github.com/diggudg/polestar-journey-log-explorer"
+                    href="https://github.com/diggudg/polestar-telemetry"
                     target="_blank"
                     c="dimmed"
                     size="sm"
@@ -179,7 +196,7 @@ function App() {
                     </Group>
                   </Anchor>
                   <Anchor
-                    href="https://github.com/diggudg/polestar-journey-log-explorer/blob/main/LICENSE"
+                    href="https://github.com/diggudg/polestar-telemetry/blob/main/LICENSE"
                     target="_blank"
                     c="dimmed"
                     size="sm"
@@ -191,10 +208,7 @@ function App() {
               <Divider />
               <Box>
                 <Text size="xs" c="dimmed" ta="center">
-                  © 2025 Digvijay Singh &lt;diggudg@gmail.com&gt; • Made with ⚡ by the community
-                </Text>
-                <Text size="xs" c="dimmed" ta="center" mt={4}>
-                  Forked and maintained by Digvijay Singh. Original project by Kinn Coelho Juliao — many thanks to the original author for creating this tool.
+                  © 2025 Digvijay Singh &lt;diggudg@gmail.com&gt;
                 </Text>
                 <Text size="xs" c="dimmed" ta="center" mt={4}>
                   This project is not affiliated with, endorsed by, or in any

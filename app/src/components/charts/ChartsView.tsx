@@ -3,8 +3,9 @@ import { Grid, Paper, Text, Title, useMantineTheme } from "@mantine/core";
 import { useMemo } from "react";
 import {
   Area, AreaChart, Bar,
-  BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis
+  BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from "recharts";
+import { DistributionChart } from "./DistributionChart";
 import { ChartDataProcessor } from '../../services/charts/ChartDataProcessor';
 import type { Trip } from '../../types';
 
@@ -76,28 +77,11 @@ function ChartsView({ data }: ChartsViewProps) {
 
       {/* Trip Distance Distribution */}
       <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
-        <Paper p="md" radius="md" withBorder h="100%">
-          <Title order={4} mb="lg" size="h5">Trip Distance Distribution</Title>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={chartData.distanceRanges}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {chartData.distanceRanges.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
-        </Paper>
+        <DistributionChart 
+          title="Trip Distance Distribution" 
+          data={chartData.distanceRanges} 
+          colors={COLORS} 
+        />
       </Grid.Col>
 
       {/* Efficiency Distribution */}

@@ -1,13 +1,13 @@
-# Polestar Journey Log Explorer
+# Polestar Telemetry
 
-![Polestar Journey Log Explorer](./assets/white_transparent.png)
+![Polestar Telemetry](./assets/white_transparent.png)
 
-[![Deploy to GitHub Pages](https://github.com/diggudg/polestar-journey-log-explorer/actions/workflows/deploy.yml/badge.svg)](https://github.com/diggudg/polestar-journey-log-explorer/actions/workflows/deploy.yml)
-[![Dependabot](https://github.com/diggudg/polestar-journey-log-explorer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/diggudg/polestar-journey-log-explorer/actions/workflows/dependabot/dependabot-updates)
-[![CodeQL](https://github.com/diggudg/polestar-journey-log-explorer/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/diggudg/polestar-journey-log-explorer/actions/workflows/github-code-scanning/codeql)
+[![Deploy to GitHub Pages](https://github.com/diggudg/polestar-telemetry/actions/workflows/deploy.yml/badge.svg)](https://github.com/diggudg/polestar-telemetry/actions/workflows/deploy.yml)
+[![Dependabot](https://github.com/diggudg/polestar-telemetry/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/diggudg/polestar-telemetry/actions/workflows/dependabot/dependabot-updates)
+[![CodeQL](https://github.com/diggudg/polestar-telemetry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/diggudg/polestar-telemetry/actions/workflows/github-code-scanning/codeql)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-An interactive web-based dashboard for analyzing your Polestar journey log data. Upload your CSV/Excel files and explore comprehensive statistics, visualizations, and insights about your electric vehicle trips—all processed locally in your browser with complete privacy.
+An interactive web-based dashboard for analyzing your Polestar vehicle telemetry and journey data. Upload your CSV/Excel files and vehicle status data to explore comprehensive statistics, visualizations, and insights about your electric vehicle—all processed locally in your browser with complete privacy.
 
 ## ✨ Features
 
@@ -42,7 +42,7 @@ An interactive web-based dashboard for analyzing your Polestar journey log data.
 
 ### Try It Online
 
-Visit the live demo: **[https://diggudg.github.io/polestar-journey-log-explorer/](https://diggudg.github.io/polestar-journey-log-explorer/)**
+Visit the live demo: **[https://diggudg.github.io/polestar-telemetry/](https://diggudg.github.io/polestar-telemetry/)**
 
 1. Download your journey log from your Polestar app
 2. Visit the website and upload your CSV/XLSX file
@@ -52,8 +52,8 @@ Visit the live demo: **[https://diggudg.github.io/polestar-journey-log-explorer/
 
 ```bash
 # Clone the repository
-git clone https://github.com/diggudg/polestar-journey-log-explorer.git
-cd polestar-journey-log-explorer/app
+git clone https://github.com/diggudg/polestar-telemetry.git
+cd polestar-telemetry/app
 
 # Install dependencies
 npm install
@@ -104,6 +104,8 @@ The application supports CSV and XLSX files with these columns:
 - Efficiency (kWh/100km)
 - SOC (State of Charge)
 - Odometer readings
+- **Vehicle Status (vts.json)**: Contains battery, health, and location data.
+- **Charging Settings (chronos.json)**: Contains charging schedule and preferences.
 
 See the [User Guide](./docs/USER_GUIDE.md) for detailed data format specifications.
 
@@ -117,25 +119,22 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 Copyright (c) 2025 Digvijay Singh <diggudg@gmail.com>
 
-This fork is maintained by Digvijay Singh <diggudg@gmail.com>. Original project created by Kinn Coelho Juliao <kinncj@gmail.com> — many thanks to the original author for their work.
-
 ## 🙏 Acknowledgments
 
 - Polestar for creating amazing electric vehicles
 - The open-source community for the excellent libraries used in this project
-- All contributors who help improve this tool
 
 ## ⚠️ Disclaimer
 
-**This is a community-driven project and is not affiliated with, endorsed by, or in any way officially connected with Polestar, the Polestar brand, Geely, or any of their subsidiaries or affiliates.**
+**This project is not affiliated with, endorsed by, or in any way officially connected with Polestar, the Polestar brand, Geely, or any of their subsidiaries or affiliates.**
 
-This tool is created by the community for analyzing journey log data exported from Polestar vehicles. All trademarks, logos, and brand names are the property of their respective owners.
+This tool is created for analyzing journey log and vehicle telemetry data exported from Polestar vehicles. All trademarks, logos, and brand names are the property of their respective owners.
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/diggudg/polestar-journey-log-explorer/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/diggudg/polestar-journey-log-explorer/discussions)
+- **Issues**: [GitHub Issues](https://github.com/diggudg/polestar-telemetry/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/diggudg/polestar-telemetry/discussions)
 
 ---
 
-Made with ⚡ for Polestar drivers
+© 2025 Digvijay Singh

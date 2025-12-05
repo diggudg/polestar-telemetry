@@ -223,6 +223,25 @@ export class MapService {
     }
 
     /**
+     * Fit map view to features extent
+     * @param {Array} features - Array of OpenLayers features
+     */
+    fitToFeatures(features) {
+        if (!this.map || !features || features.length === 0) return;
+
+        const source = new VectorSource({ features });
+        const extent = source.getExtent();
+
+        if (extent && !extent.some(val => !isFinite(val))) {
+            this.map.getView().fit(extent, {
+                padding: [50, 50, 50, 50],
+                duration: 1000,
+                maxZoom: 16
+            });
+        }
+    }
+
+    /**
      * Cleanup map resources
      */
     destroy() {

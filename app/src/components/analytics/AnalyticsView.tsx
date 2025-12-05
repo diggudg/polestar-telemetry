@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Paper, Text, SimpleGrid, Stack, Group, ThemeIcon, Table, Badge, RingProgress, Center, ActionIcon, Tooltip, Loader } from '@mantine/core';
 import { IconBolt, IconMapPin, IconRoute, IconAlertTriangle, IconChargingPile, IconSearch } from '@tabler/icons-react';
 import { ChartDataProcessor } from '../../services/charts/ChartDataProcessor';
+import UIColors from '../../theme/uiColors';
 import type { Trip } from '../../types';
 
 interface AnalyticsViewProps {
@@ -22,7 +23,7 @@ function AnalyticsView({ data }: AnalyticsViewProps) {
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
                 headers: {
-                    'User-Agent': 'Polestar Journey Log Explorer'
+                    'User-Agent': 'Polestar Telemetry'
                 }
             });
             const data = await response.json();
@@ -124,7 +125,7 @@ function AnalyticsView({ data }: AnalyticsViewProps) {
                         <Table.Td>{route.avgDistance.toFixed(1)} km</Table.Td>
                         <Table.Td>
                             <Badge
-                                color={route.avgEfficiency < 18 ? 'green' : route.avgEfficiency < 22 ? 'yellow' : 'red'}
+                                color={route.avgEfficiency < 18 ? 'polestarOrange' : route.avgEfficiency < 22 ? 'orange' : 'polestarRed'}
                                 variant="light"
                             >
                                 {route.avgEfficiency.toFixed(1)} kWh/100km
@@ -158,7 +159,7 @@ function AnalyticsView({ data }: AnalyticsViewProps) {
                         value={`${chargingStats.totalChargedKwh.toFixed(0)} kWh`}
                         subtitle="Estimated from SOC increase"
                         icon={IconBolt}
-                        color="yellow"
+                        color="orange"
                     />
                     <StatCard
                         title="Charging Sessions"
@@ -172,7 +173,7 @@ function AnalyticsView({ data }: AnalyticsViewProps) {
                         value={`${chargingStats.avgChargeKwh.toFixed(1)} kWh`}
                         subtitle="Average energy added"
                         icon={IconBolt}
-                        color="green"
+                        color="polestarOrange"
                     />
                 </SimpleGrid>
 

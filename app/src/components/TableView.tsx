@@ -56,10 +56,10 @@ function TableView({ data }) {
 
   const getEfficiencyColor = (efficiency) => {
     const eff = parseFloat(efficiency);
-    if (eff < 15) return 'green';
+    if (eff < 15) return 'polestarOrange';
     if (eff < 20) return 'yellow';
     if (eff < 25) return 'orange';
-    return 'red';
+    return 'polestarRed';
   };
 
   const handleOpenModal = (trip) => {
@@ -91,7 +91,7 @@ function TableView({ data }) {
           </Badge>
         </Table.Td>
         <Table.Td>
-          <Badge color="blue" size="sm" variant="outline">
+          <Badge color="orange" size="sm" variant="outline">
             {trip.socSource}% → {trip.socDestination}%
           </Badge>
         </Table.Td>
@@ -100,14 +100,14 @@ function TableView({ data }) {
           <Group gap="xs">
             {hasTags && (
               <Tooltip label={annotation.tags.join(', ')} withArrow>
-                <Badge size="sm" variant="dot" color="blue">
+                <Badge size="sm" variant="dot" color="orange">
                   <IconTag size={12} /> {annotation.tags.length}
                 </Badge>
               </Tooltip>
             )}
             {hasNotes && (
               <Tooltip label={annotation.notes.substring(0, 100)} withArrow>
-                <Badge size="sm" variant="dot" color="green">
+                <Badge size="sm" variant="dot" color="polestarOrange">
                   <IconNote size={12} />
                 </Badge>
               </Tooltip>
@@ -118,7 +118,7 @@ function TableView({ data }) {
           <Tooltip label="Add notes/tags" withArrow>
             <ActionIcon
               variant={hasNotes || hasTags ? 'filled' : 'subtle'}
-              color={hasNotes || hasTags ? 'blue' : 'gray'}
+              color={hasNotes || hasTags ? 'orange' : 'polestarGrey'}
               onClick={() => handleOpenModal(trip)}
               size="sm"
             >

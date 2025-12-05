@@ -9,31 +9,41 @@ import '@mantine/notifications/styles.css';
 import '@mantine/dropzone/styles.css';
 import '@mantine/dates/styles.css';
 import './mobile.css';
+import { MantineColors } from './theme/colors';
 
 const theme = createTheme({
-  primaryColor: 'orange',
+  primaryColor: 'polestarOrange',
   colors: {
-    // Polestar Safety Orange
-    orange: [
-      '#FFF0E6',
-      '#FFD6C2',
-      '#FFB899',
-      '#FF9970',
-      '#FF7A47',
-      '#FF5C1F',
-      '#F43F00', // Primary shade
-      '#CC3500',
-      '#A32A00',
-      '#7A2000',
-    ],
-    // Polestar Carbon / Grays
+    // Polestar Safety Orange - Primary accent color
+    polestarOrange: MantineColors.polestarOrange,
+    // Polestar Red - Alerts and errors
+    polestarRed: MantineColors.polestarRed,
+    // Polestar Grey - Secondary, inactive states
+    polestarGrey: MantineColors.polestarGrey,
+    // Polestar Green - Success states
+    polestarGreen: MantineColors.polestarGreen,
+    // Polestar Cyan - Info states
+    polestarCyan: MantineColors.polestarCyan,
+    // Polestar Yellow - Warning states
+    polestarYellow: MantineColors.polestarYellow,
+    // Override default 'orange' to use Polestar orange
+    orange: MantineColors.polestarOrange,
+    // Override 'red' to use Polestar red
+    red: MantineColors.polestarRed,
+    // Override 'green' to use Polestar green
+    green: MantineColors.polestarGreen,
+    // Override 'cyan' to use Polestar cyan
+    cyan: MantineColors.polestarCyan,
+    // Override 'yellow' to use Polestar yellow
+    yellow: MantineColors.polestarYellow,
+    // Polestar Carbon / Grays for dark mode
     dark: [
-      '#C1C2C5',
-      '#A6A7AB',
-      '#909296',
-      '#5C5F66',
-      '#373A40',
-      '#2C2E33',
+      '#C8C9C7', // Grey Nurse
+      '#B1B3B3', // Agathe Grey
+      '#97999B', // Grey Chateau
+      '#75787B', // Storm Grey
+      '#53565A', // Iron Grey
+      '#3A3C3F',
       '#25262B',
       '#1A1B1E', // Dark background
       '#141517',

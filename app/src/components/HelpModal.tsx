@@ -6,7 +6,7 @@ function HelpModal({ opened, onClose }) {
     <Modal
       opened={opened}
       onClose={onClose}
-      title="How to Use Journey Log Explorer"
+      title="How to Use Telemetry"
       size="lg"
       centered
     >

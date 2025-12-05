@@ -11,13 +11,15 @@ import type { Trip } from '../../types';
 
 interface MapViewProps {
   data: Trip[];
+  selectedTripId?: string | null;
+  onTripSelect?: (tripId: string | null) => void;
 }
 
-function MapView({ data }: MapViewProps) {
+function MapView({ data, selectedTripId, onTripSelect }: MapViewProps) {
   const mapRef = useRef(null);
   const mapServiceRef = useRef(null);
 
-  const [selectedTrip, setSelectedTrip] = useState(null);
+  // const [selectedTrip, setSelectedTrip] = useState(null); // Removed internal state
   const [linkTripsByDay, setLinkTripsByDay] = useState(false);
   const [tripsToShow, setTripsToShow] = useState("100");
   const [selectedTileLayer, setSelectedTileLayer] = useState("osm");
@@ -107,10 +109,16 @@ function MapView({ data }: MapViewProps) {
     { value: "ALL", label: `All trips (${allTrips.length})` },
   ];
 
+  // Calculate selected trip index based on ID
+  const selectedTripIndex = useMemo(() => {
+    if (!selectedTripId) return null;
+    return allTrips.findIndex(t => `${t.startDate}-${t.startOdometer}-${t.endOdometer}` === selectedTripId);
+  }, [allTrips, selectedTripId]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const displayTrips =
-    selectedTrip !== null
-      ? [allTrips[parseInt(selectedTrip)]]
+    selectedTripIndex !== null && selectedTripIndex !== -1
+      ? [allTrips[selectedTripIndex]]
       : tripsToShow === "ALL"
         ? allTrips
         : allTrips.slice(0, parseInt(tripsToShow));
@@ -124,7 +132,8 @@ function MapView({ data }: MapViewProps) {
       featureBuilder,
       markerFactory
     );
-    mapService.initializeMap(mapRef.current, center, selectedTileLayer);
+    // Initialize with a default center, will be updated when data loads
+    mapService.initializeMap(mapRef.current, [0, 0], selectedTileLayer);
     mapServiceRef.current = mapService;
 
     return () => {
@@ -134,7 +143,6 @@ function MapView({ data }: MapViewProps) {
       }
     };
   }, [
-    center,
     featureBuilder,
     markerFactory,
     selectedTileLayer,
@@ -239,13 +247,13 @@ function MapView({ data }: MapViewProps) {
     }
 
     // Update map view and features
-    mapServiceRef.current.updateView(center, selectedTrip !== null ? 12 : 11);
     mapServiceRef.current.updateFeatures(features, heatmapFeatures);
+    mapServiceRef.current.fitToFeatures(features);
   }, [
     displayTrips,
     linkTripsByDay,
     center,
-    selectedTrip,
+    selectedTripIndex,
     tripsByDay,
     showMarkers,
     featureBuilder,
@@ -262,17 +270,7 @@ function MapView({ data }: MapViewProps) {
         style={{ position: "relative", zIndex: 1000 }}
       >
         <Stack gap="md">
-          <Select
-            label="Select a specific trip (or leave empty to show all recent trips)"
-            placeholder="Show all trips"
-            data={tripOptions}
-            value={selectedTrip}
-            onChange={setSelectedTrip}
-            searchable
-            clearable
-            maxDropdownHeight={400}
-            size="sm"
-          />
+          {/* Removed internal trip selector */}
 
           <Group grow align="flex-start" wrap="wrap">
             <Select
@@ -280,7 +278,7 @@ function MapView({ data }: MapViewProps) {
               value={tripsToShow}
               onChange={setTripsToShow}
               data={tripsToShowOptions}
-              disabled={selectedTrip !== null}
+              disabled={selectedTripId !== null}
               size="sm"
               style={{ minWidth: "150px" }}
             />
@@ -303,7 +301,7 @@ function MapView({ data }: MapViewProps) {
               onChange={(event) =>
                 setLinkTripsByDay(event.currentTarget.checked)
               }
-              disabled={selectedTrip !== null}
+              disabled={selectedTripId !== null}
               size="sm"
             />
 

@@ -43,12 +43,12 @@ function StatsCards({ statistics }) {
     <>
       <Group justify="flex-end" mb="md">
         <Tooltip label="Calculate charging costs" withArrow>
-          <ActionIcon
-            size="lg"
-            variant="filled"
-            color="green"
-            onClick={() => setCostModalOpened(true)}
-          >
+            <ActionIcon
+              size="lg"
+              variant="filled"
+              color="polestarOrange"
+              onClick={() => setCostModalOpened(true)}
+            >
             <IconCurrencyDollar size={20} />
           </ActionIcon>
         </Tooltip>
@@ -73,14 +73,14 @@ function StatsCards({ statistics }) {
         value={statistics.totalConsumption}
         unit="kWh"
         icon={IconBolt}
-        color="yellow"
+        color="orange"
       />
       <StatCard
         title="Avg Efficiency"
         value={statistics.avgEfficiency}
         unit="kWh/100km"
         icon={IconGasStation}
-        color="green"
+          color="polestarOrange"
       />
       <StatCard
         title="Best Efficiency"
@@ -94,7 +94,7 @@ function StatsCards({ statistics }) {
         value={statistics.worstEfficiency}
         unit="kWh/100km"
         icon={IconTrendingUp}
-        color="red"
+        color="polestarRed"
       />
       <StatCard
         title="Avg Trip Distance"
@@ -115,7 +115,7 @@ function StatsCards({ statistics }) {
         value={statistics.carbonSaved}
         unit="kg"
         icon={IconLeaf}
-        color="green"
+          color="polestarOrange"
       />
       <StatCard
         title="Gas Not Used"

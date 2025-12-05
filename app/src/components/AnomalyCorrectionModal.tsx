@@ -59,7 +59,7 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
                 <Table.Td>
                     <Stack gap={4}>
                         {item.issues.map((issue, i) => (
-                            <Badge key={i} color="red" variant="light" size="sm">{issue}</Badge>
+                            <Badge key={i} color="polestarRed" variant="light" size="sm">{issue}</Badge>
                         ))}
                     </Stack>
                 </Table.Td>
@@ -86,7 +86,7 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
                         <Tooltip label="Keep Original">
                             <ActionIcon
                                 variant={item.action === 'keep' ? 'filled' : 'light'}
-                                color="gray"
+                                color="polestarGrey"
                                 onClick={() => handleActionChange((activePage - 1) * itemsPerPage + index, 'keep')}
                             >
                                 <IconCheck size={16} />
@@ -95,7 +95,7 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
                         <Tooltip label="Skip/Delete">
                             <ActionIcon
                                 variant={item.action === 'skip' ? 'filled' : 'light'}
-                                color="red"
+                                color="polestarRed"
                                 onClick={() => handleActionChange((activePage - 1) * itemsPerPage + index, 'skip')}
                             >
                                 <IconTrash size={16} />
@@ -104,7 +104,7 @@ export default function AnomalyCorrectionModal({ opened, anomalies, onClose, onA
                         <Tooltip label="Use Corrected">
                             <ActionIcon
                                 variant={item.action === 'correct' ? 'filled' : 'light'}
-                                color="blue"
+                                color="orange"
                                 onClick={() => handleActionChange((activePage - 1) * itemsPerPage + index, 'correct')}
                             >
                                 <IconEdit size={16} />

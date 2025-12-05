@@ -1,0 +1,129 @@
+.timelineContainer {
+  position: relative;
+  height: 60px;
+}
+
+.timelineBar {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background-color: #1e293b;
+  border-radius: 10px;
+}
+
+.chargingWindow {
+  position: absolute;
+  top: 20px;
+  height: 20px;
+  border-radius: 10px;
+  opacity: 0.8;
+}
+
+.chargingWindowActive {
+  background-color: #f97316;
+}
+
+.chargingWindowInactive {
+  background-color: #f97316;
+  opacity: 0.5;
+}
+
+.timeMarker {
+  position: absolute;
+  top: 15px;
+  width: 2px;
+  height: 30px;
+  background-color: #fff;
+  transform: translateX(-1px);
+}
+
+.timeLabel {
+  position: absolute;
+  top: 45px;
+}
+
+.timeLabelStart {
+  left: 0;
+}
+
+.timeLabelMiddle {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.timeLabelEnd {
+  right: 0;
+}
+
+/* Common component styles */
+.textCenter {
+  text-align: center;
+}
+
+.lineHeightOne {
+  line-height: 1;
+}
+
+/* SVG styles */
+.svgDiagram {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.svgTireDiagram {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Legend items */
+.legendItem {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legendClosed {
+  background-color: #64748b;
+}
+
+.legendOpen {
+  background-color: #f97316;
+}
+
+/* Map container */
+.mapWrapper {
+  height: 100%;
+  overflow: hidden;
+}
+
+.mapContainer {
+  width: 100%;
+  height: 100%;
+}
+
+/* Flex utilities */
+.flexCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Climate control seat grid */
+.seatGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* All progress bars should use orange */
+.progressOrange {
+  --mantine-color-filled: #f97316;
+}

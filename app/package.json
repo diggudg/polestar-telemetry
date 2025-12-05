@@ -1,5 +1,5 @@
 {
-  "name": "polestar-journey-log-explorer",
+  "name": "polestar-telemetry",
   "private": true,
   "version": "1.0.0",
   "type": "module",
