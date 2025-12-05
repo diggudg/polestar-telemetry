@@ -1,13 +1,7 @@
 import {
-  Badge,
-  Box,
   Button,
-  Center,
-  Combobox,
-  Divider,
   Grid,
   Group,
-  Loader,
   Modal,
   NumberInput,
   Paper,
@@ -16,20 +10,10 @@ import {
   Slider,
   Stack,
   Text,
-  TextInput,
   ThemeIcon,
-  useCombobox,
   useMantineColorScheme,
 } from '@mantine/core';
-import {
-  IconArrowRight,
-  IconBatteryCharging,
-  IconBolt,
-  IconChargingPile,
-  IconClock,
-  IconCurrencyDollar,
-  IconHome,
-} from '@tabler/icons-react';
+import { IconChargingPile, IconClock, IconCurrencyDollar, IconHome } from '@tabler/icons-react';
 import { useState } from 'react';
 import type { Statistics } from '../types';
 

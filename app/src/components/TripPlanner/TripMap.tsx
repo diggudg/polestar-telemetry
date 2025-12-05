@@ -1,5 +1,5 @@
 import { Paper } from '@mantine/core';
-import { Feature, Map, View } from 'ol';
+import { Feature, Map as OlMap, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
 import { LineString, Point } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
@@ -22,7 +22,7 @@ interface TripMapProps {
 
 export default function TripMap({ start, end, routeGeometry, waypoints }: TripMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<Map | null>(null);
+  const mapInstance = useRef<OlMap | null>(null);
   const vectorSource = useRef<VectorSource>(new VectorSource());
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
       source: vectorSource.current,
     });
 
-    const map = new Map({
+    const map = new OlMap({
       target: mapRef.current,
       layers: [
         new TileLayer({
@@ -144,7 +144,7 @@ export default function TripMap({ start, end, routeGeometry, waypoints }: TripMa
     if (features.length > 0) {
       vectorSource.current.addFeatures(features);
       const extent = vectorSource.current.getExtent();
-      if (extent && isFinite(extent[0])) {
+      if (extent && Number.isFinite(extent[0])) {
         mapInstance.current.getView().fit(extent, {
           padding: [50, 50, 50, 50],
           maxZoom: 15,
